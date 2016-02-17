@@ -127,5 +127,13 @@ namespace LameBoy
             }
             return 0x00;
         }
+
+        public short Read16(int addr)
+        {
+            byte upper = Read8(addr + 1);
+            byte lower = Read8(addr);
+            short result = (short)((upper << 8) + (lower & 0xFF));
+            return result;
+        }
     }
 }
