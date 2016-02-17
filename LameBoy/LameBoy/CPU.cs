@@ -26,16 +26,23 @@ namespace LameBoy
                 if (instr == 0x00)
                 {
                     pc++;
+                    Console.WriteLine("NOP");
                 }
                 else if(instr == 0xC3)
                 {
                     short newaddr = cart.Read16(pc + 1);
                     pc = newaddr;
-                    Console.WriteLine("Absolute Jump to $" + pc.ToString("X4"));
+                    Console.WriteLine("Absolute jump to $" + pc.ToString("X4"));
+                }
+                else if(instr == 0xFF)
+                {
+                    pc = 0x0038;
+                    Console.WriteLine("Jump to reset vector $0038");
                 }
                 else
                 {
-                    Console.WriteLine("Unimplemented instr @ $" + pc.ToString("x4") + ", moving to $" + pc++.ToString("X4"));
+                    Console.WriteLine("Unimplemented instr @ $" + pc.ToString("x4") + ", moving to $" + (pc + 1).ToString("X4"));
+                    pc++;
                 }
                 Console.ReadLine();
             }
