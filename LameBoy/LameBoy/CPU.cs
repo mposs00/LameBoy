@@ -13,8 +13,7 @@ namespace LameBoy
         byte b = 0;
         byte c = 0;
         byte f = 0;
-        short hl = 0;
-        bool zeroSet = false;
+        ushort hl = 0;
         Cart cart;
         byte instr;
 
@@ -83,22 +82,22 @@ namespace LameBoy
                     }
                     else
                     {
-                        pc++;
+                        pc += 2;
                         Console.WriteLine("Zero flag set, PC incremented");
                     }
                     f = 0;
                 }
                 else if(instr == 0x21)
                 {
-                    short data = cart.Read16(pc + 1);
+                    ushort data = (ushort) cart.Read16(pc + 1);
                     hl = data;
                     pc += 3;
                     Console.WriteLine("Loaded value 0x" + data.ToString("X4") + " into hl");
                 }
                 else if(instr == 0x32)
                 {
-                    //TODO: Ram interface, properly implement this instruction (ldd)
-                    //copy a to address stored in hl
+                    Console.WriteLine(hl);
+                    cart.Write8(hl, a);
                     Console.WriteLine("a copied to $" + hl.ToString("X2") + " and HL decremented");
                     hl--;
                     pc++;

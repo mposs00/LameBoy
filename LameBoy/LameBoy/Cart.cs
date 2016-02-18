@@ -45,11 +45,14 @@ namespace LameBoy
     {
         string romName;
         byte[] ROM;
+        byte[] RAM;
 
         public Cart(string romName)
         {
             this.romName = romName;
+            RAM = new byte[0xFFFF];
             ROM = File.ReadAllBytes(romName);
+            Array.Copy(ROM, 0, RAM, 0, ROM.Length);
         }
 
         public CartType GetCartType()
@@ -123,7 +126,7 @@ namespace LameBoy
         {
             if(GetCartType() == CartType.ROM)
             {
-                return ROM[addr];
+                return RAM[addr];
             }
             return 0x00;
         }
@@ -134,6 +137,25 @@ namespace LameBoy
             byte lower = Read8(addr);
             short result = (short)((upper << 8) + (lower & 0xFF));
             return result;
+        }
+
+        public void Write8(int addr, byte data)
+        {
+            if(GetCartType() == CartType.ROM)
+            {
+                RAM[addr] = data;
+            }
+        }
+
+        public void Write16(int addr, short data)
+        {
+            if(GetCartType() == CartType.ROM)
+            {
+                byte upper = (byte) ((data & 0xFF00) >> 8);
+                byte lower = (byte)(data & 0xFF);
+                Write8(addr + 1, upper);
+                Write16(addr, lower);
+            }
         }
     }
 }
