@@ -53,6 +53,16 @@ namespace LameBoy
                     pc += 2;
                     Console.WriteLine("Loaded value 0x" + data.ToString("X2") + " into b, advanced to $" + pc.ToString("X4"));
                 }
+                else if(instr == 0x0D)
+                {
+                    c--;
+                    pc++;
+                    if (c == 0x00)
+                        f += 0x40;
+                    else
+                        f = 0;
+                    Console.WriteLine("Decremented c to 0x" + c.ToString("X2"));
+                }
                 else if(instr == 0x0E)
                 {
                     byte data = cart.Read8(pc + 1);
