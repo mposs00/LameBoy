@@ -16,6 +16,7 @@ namespace LameBoy
         ushort hl = 0;
         Cart cart;
         byte instr;
+        bool cpuOut = false;
 
         public CPU(Cart cart)
         {
@@ -29,12 +30,16 @@ namespace LameBoy
                 //TODO: Properly set the flags on each instruction
                 //TODO: Don't output the PC every time it changes, only once on each CPU cycle
                 instr = cart.Read8(pc);
-                Console.WriteLine("PC: $" + pc.ToString("X4"));
-                Console.WriteLine("Instruction: 0x" + instr.ToString("X2"));
+                if (cpuOut)
+                {
+                    Console.WriteLine("PC: $" + pc.ToString("X4"));
+                    Console.WriteLine("Instruction: 0x" + instr.ToString("X2"));
+                }
                 if (instr == 0x00)
                 {
                     pc++;
-                    Console.WriteLine("NOP");
+                    if(cpuOut)
+                        Console.WriteLine("NOP");
                 }
                 else if(instr == 0x05)
                 {
@@ -44,14 +49,16 @@ namespace LameBoy
                         f += 0x40; //0x40 = 0b01000000, zero flag
                     else
                         f = 0;
-                    Console.WriteLine("Decremented b to 0x" + b.ToString("X2"));
+                    if (cpuOut)
+                        Console.WriteLine("Decremented b to 0x" + b.ToString("X2"));
                 }
                 else if(instr == 0x06)
                 {
                     byte data = cart.Read8(pc + 1);
                     b = data;
                     pc += 2;
-                    Console.WriteLine("Loaded value 0x" + data.ToString("X2") + " into b, advanced to $" + pc.ToString("X4"));
+                    if (cpuOut)
+                        Console.WriteLine("Loaded value 0x" + data.ToString("X2") + " into b, advanced to $" + pc.ToString("X4"));
                 }
                 else if(instr == 0x0D)
                 {
@@ -61,14 +68,16 @@ namespace LameBoy
                         f += 0x40;
                     else
                         f = 0;
-                    Console.WriteLine("Decremented c to 0x" + c.ToString("X2"));
+                    if (cpuOut)
+                        Console.WriteLine("Decremented c to 0x" + c.ToString("X2"));
                 }
                 else if(instr == 0x0E)
                 {
                     byte data = cart.Read8(pc + 1);
                     c = data;
                     pc += 2;
-                    Console.WriteLine("Loaded value 0x" + data.ToString("X2") + " into c, advanced to $" + pc.ToString("X4"));
+                    if (cpuOut)
+                        Console.WriteLine("Loaded value 0x" + data.ToString("X2") + " into c, advanced to $" + pc.ToString("X4"));
                 }
                 else if (instr == 0x20)
                 {
@@ -88,12 +97,14 @@ namespace LameBoy
                         {
                             pc += loc;
                         }
-                        Console.WriteLine("PC advanced by 0x" + loc.ToString("X2") + " to address $" + pc.ToString("X4"));
+                        if (cpuOut)
+                            Console.WriteLine("PC advanced by 0x" + loc.ToString("X2") + " to address $" + pc.ToString("X4"));
                     }
                     else
                     {
                         pc += 2;
-                        Console.WriteLine("Zero flag set, PC incremented");
+                        if (cpuOut)
+                            Console.WriteLine("Zero flag set, PC incremented");
                     }
                     f = 0;
                 }
@@ -102,13 +113,14 @@ namespace LameBoy
                     ushort data = (ushort) cart.Read16(pc + 1);
                     hl = data;
                     pc += 3;
-                    Console.WriteLine("Loaded value 0x" + data.ToString("X4") + " into hl");
+                    if (cpuOut)
+                        Console.WriteLine("Loaded value 0x" + data.ToString("X4") + " into hl");
                 }
                 else if(instr == 0x32)
                 {
-                    Console.WriteLine(hl);
                     cart.Write8(hl, a);
-                    Console.WriteLine("a copied to $" + hl.ToString("X2") + " and HL decremented");
+                    if (cpuOut)
+                        Console.WriteLine("a copied to $" + hl.ToString("X2") + " and HL decremented");
                     hl--;
                     pc++;
                 }
@@ -117,25 +129,29 @@ namespace LameBoy
                     byte result = (byte) (a ^ a);
                     a = result;
                     pc++;
-                    Console.WriteLine("XORed a with a, resulting in a containing 0x" + a.ToString("X2"));
+                    if (cpuOut)
+                        Console.WriteLine("XORed a with a, resulting in a containing 0x" + a.ToString("X2"));
                 }
                 else if(instr == 0xC3)
                 {
                     short newaddr = cart.Read16(pc + 1);
                     pc = newaddr;
-                    Console.WriteLine("Absolute jump to $" + pc.ToString("X4"));
+                    if (cpuOut)
+                        Console.WriteLine("Absolute jump to $" + pc.ToString("X4"));
                 }
                 else if(instr == 0xFF)
                 {
                     pc = 0x0038;
-                    Console.WriteLine("Jump to reset vector $0038");
+                    if (cpuOut)
+                        Console.WriteLine("Jump to reset vector $0038");
                 }
                 else
                 {
-                    Console.WriteLine("Unimplemented instr @ $" + pc.ToString("x4") + ", moving to $" + (pc + 1).ToString("X4"));
+                    cpuOut = true;
+                    Console.WriteLine("Unimplemented instr 0x" + instr.ToString("X2") + " @ $" + pc.ToString("x4") + ", moving to $" + (pc + 1).ToString("X4"));
+                    Console.ReadLine();
                     pc++;
                 }
-                Console.ReadLine();
             }
         }
     }
