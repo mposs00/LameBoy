@@ -14,6 +14,7 @@ namespace LameBoy
         byte c = 0;
         byte f = 0;
         ushort hl = 0;
+        bool interruptsEnabled = true;
         Cart cart;
         byte instr;
         bool cpuOut = false;
@@ -38,10 +39,10 @@ namespace LameBoy
                 if (instr == 0x00)
                 {
                     pc++;
-                    if(cpuOut)
+                    if (cpuOut)
                         Console.WriteLine("NOP");
                 }
-                else if(instr == 0x05)
+                else if (instr == 0x05)
                 {
                     b--;
                     pc++;
@@ -52,7 +53,7 @@ namespace LameBoy
                     if (cpuOut)
                         Console.WriteLine("Decremented b to 0x" + b.ToString("X2"));
                 }
-                else if(instr == 0x06)
+                else if (instr == 0x06)
                 {
                     byte data = cart.Read8(pc + 1);
                     b = data;
@@ -60,7 +61,7 @@ namespace LameBoy
                     if (cpuOut)
                         Console.WriteLine("Loaded value 0x" + data.ToString("X2") + " into b, advanced to $" + pc.ToString("X4"));
                 }
-                else if(instr == 0x0D)
+                else if (instr == 0x0D)
                 {
                     c--;
                     pc++;
@@ -71,7 +72,7 @@ namespace LameBoy
                     if (cpuOut)
                         Console.WriteLine("Decremented c to 0x" + c.ToString("X2"));
                 }
-                else if(instr == 0x0E)
+                else if (instr == 0x0E)
                 {
                     byte data = cart.Read8(pc + 1);
                     c = data;
@@ -81,7 +82,7 @@ namespace LameBoy
                 }
                 else if (instr == 0x20)
                 {
-                    if(!((f & 0x40) == 0x40))
+                    if (!((f & 0x40) == 0x40))
                     {
                         //Relative jumps are stored as a two's complement binary number, and must account for the instruction
                         //just executed, so the PC must also be incremented
@@ -90,7 +91,7 @@ namespace LameBoy
                         bool negative = ((loc & 0x80) == 0x80);
                         if (negative)
                         {
-                            loc = (byte) (255 - loc);
+                            loc = (byte)(255 - loc);
                             pc -= loc;
                         }
                         else
@@ -108,15 +109,15 @@ namespace LameBoy
                     }
                     f = 0;
                 }
-                else if(instr == 0x21)
+                else if (instr == 0x21)
                 {
-                    ushort data = (ushort) cart.Read16(pc + 1);
+                    ushort data = (ushort)cart.Read16(pc + 1);
                     hl = data;
                     pc += 3;
                     if (cpuOut)
                         Console.WriteLine("Loaded value 0x" + data.ToString("X4") + " into hl");
                 }
-                else if(instr == 0x32)
+                else if (instr == 0x32)
                 {
                     cart.Write8(hl, a);
                     if (cpuOut)
@@ -124,20 +125,54 @@ namespace LameBoy
                     hl--;
                     pc++;
                 }
-                else if(instr == 0xAF)
+                else if (instr == 0x3E)
                 {
-                    byte result = (byte) (a ^ a);
+                    pc++;
+                    a = cart.Read8(pc);
+                    pc++;
+                    cpuOut = true;
+                    if (cpuOut)
+                        Console.WriteLine("Loaded value 0x" + a.ToString("X2") + " into a");
+                }
+                else if (instr == 0xAF)
+                {
+                    byte result = (byte)(a ^ a);
                     a = result;
                     pc++;
                     if (cpuOut)
                         Console.WriteLine("XORed a with a, resulting in a containing 0x" + a.ToString("X2"));
                 }
-                else if(instr == 0xC3)
+                else if (instr == 0xC3)
                 {
                     short newaddr = cart.Read16(pc + 1);
                     pc = newaddr;
                     if (cpuOut)
                         Console.WriteLine("Absolute jump to $" + pc.ToString("X4"));
+                }
+                else if (instr == 0xE0)
+                {
+                    pc++;
+                    byte offset = cart.Read8(pc);
+                    cart.Write8(0xFF00 + offset, a);
+                    pc++;
+                    if (cpuOut)
+                        Console.WriteLine("Register a=0x" + a.ToString("X2") + " copied to $FF" + offset.ToString("X2"));
+                }
+                else if (instr == 0xF0)
+                {
+                    pc++;
+                    byte offset = cart.Read8(pc);
+                    a = cart.Read8(0xFF00 + offset);
+                    pc++;
+                    if (cpuOut)
+                        Console.WriteLine("$FF" + offset.ToString("X2") + "=0x" + a.ToString("X2") + " copied to register a");
+                }
+                else if(instr == 0xF3)
+                {
+                    interruptsEnabled = false;
+                    pc++;
+                    if (cpuOut)
+                        Console.WriteLine("Interrupts disabled");
                 }
                 else if(instr == 0xFF)
                 {

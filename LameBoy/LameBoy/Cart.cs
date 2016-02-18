@@ -50,7 +50,7 @@ namespace LameBoy
         public Cart(string romName)
         {
             this.romName = romName;
-            RAM = new byte[0xFFFF];
+            RAM = new byte[0xFFFF + 1];
             ROM = File.ReadAllBytes(romName);
             Array.Copy(ROM, 0, RAM, 0, ROM.Length);
         }
