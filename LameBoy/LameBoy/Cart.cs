@@ -92,7 +92,7 @@ namespace LameBoy
                 byte upper = (byte) ((data & 0xFF00) >> 8);
                 byte lower = (byte)(data & 0xFF);
                 Write8(addr + 1, upper);
-                Write16(addr, lower);
+                Write8(addr, lower);
             }
         }
     }
