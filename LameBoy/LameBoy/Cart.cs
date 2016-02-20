@@ -53,7 +53,7 @@ namespace LameBoy
 
         public CartType GetCartType()
         {
-            if (Enum.IsDefined(typeof(CartType), ROM[0x147]))
+            if (Enum.IsDefined(typeof(CartType), (int) ROM[0x147]))
                 return (CartType)ROM[0x147];
             else
                 //Better to just throw an exception, but whatever.
