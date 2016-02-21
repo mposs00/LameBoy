@@ -47,13 +47,18 @@ namespace LameBoy
         {
             this.romName = romName;
             RAM = new byte[0xFFFF + 1];
-            ROM = File.ReadAllBytes(romName);
+
+            if (File.Exists(romName))
+                ROM = File.ReadAllBytes(romName);
+            else
+                throw new FileNotFoundException("Couldn't open up a Game Boy ROM.", romName);
+
             Array.Copy(ROM, 0, RAM, 0, ROM.Length);
         }
 
         public CartType GetCartType()
         {
-            if (Enum.IsDefined(typeof(CartType), (int) ROM[0x147]))
+            if (Enum.IsDefined(typeof(CartType), (int)ROM[0x147]))
                 return (CartType)ROM[0x147];
             else
                 //Better to just throw an exception, but whatever.
@@ -62,34 +67,34 @@ namespace LameBoy
 
         public byte Read8(int addr)
         {
-            if(GetCartType() == CartType.ROM)
+            if (GetCartType() == CartType.ROM)
             {
                 return RAM[addr];
             }
             return 0x00;
         }
 
-        public short Read16(int addr)
+        public ushort Read16(int addr)
         {
             byte upper = Read8(addr + 1);
             byte lower = Read8(addr);
-            short result = (short)((upper << 8) + (lower & 0xFF));
+            ushort result = (ushort)((upper << 8) + (lower & 0xFF));
             return result;
         }
 
         public void Write8(int addr, byte data)
         {
-            if(GetCartType() == CartType.ROM)
+            if (GetCartType() == CartType.ROM)
             {
                 RAM[addr] = data;
             }
         }
 
-        public void Write16(int addr, short data)
+        public void Write16(int addr, ushort data)
         {
-            if(GetCartType() == CartType.ROM)
+            if (GetCartType() == CartType.ROM)
             {
-                byte upper = (byte) ((data & 0xFF00) >> 8);
+                byte upper = (byte)((data & 0xFF00) >> 8);
                 byte lower = (byte)(data & 0xFF);
                 Write8(addr + 1, upper);
                 Write8(addr, lower);

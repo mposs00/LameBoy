@@ -1,0 +1,4 @@
+[submodule "LameBoy/SDL2-CS"]
+	path = LameBoy/SDL2-CS
+	url = https://github.com/flibitijibibo/SDL2-CS
+	branch = master
