@@ -26,20 +26,30 @@ namespace LameBoy
             set { mem[addr] = value; }
         }
 
+        public byte Read8(int addr)
+        {
+            return mem[addr];
+        }
+
         public ushort Read16(int addr)
         {
-            byte upper = mem[addr + 1];
-            byte lower = mem[addr];
+            byte upper = Read8(addr + 1);
+            byte lower = Read8(addr);
             ushort result = (ushort)((upper << 8) + (lower & 0xFF));
             return result;
+        }
+
+        public void Write8(int addr, byte data)
+        {
+            mem[addr] = data;
         }
 
         public void Write16(int addr, ushort data)
         {
             byte upper = (byte)((data & 0xFF00) >> 8);
             byte lower = (byte)(data & 0xFF);
-            mem[addr + 1] = upper;
-            mem[addr] = lower;
+            Write8(addr + 1, upper);
+            Write8(addr, lower);
         }
 
         public void CopyInto(Memory destin)

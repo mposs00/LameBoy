@@ -2,27 +2,54 @@
 {
     static class OpcodeTable
     {
+        private static void SetFlags(ref Registers regs, bool Z, bool S, bool HC, bool CA)
+        {
+            regs.Z = Z;
+            regs.S = S;
+            regs.HC = HC;
+            regs.CA = CA;
+        }
+
+        private static bool CheckHalfCarryAdd(ref byte reg, byte add)
+        {
+            return (((reg & 0x0F) + (add & 0x0F)) & 0x10) == 0x10;
+        }
+
+        private static bool CheckHalfCarrySubtract(ref byte reg, byte sub)
+        {
+            return (((reg & 0xF0) - (sub & 0xF0)) & 0x08) == 0x08;
+        }
+
+        private static bool CheckCarryAdd(ref ushort reg, ushort add)
+        {
+            return (((reg & 0xF0) - (add & 0xF0)) & 0x100) == 0x100;
+        }
+
+        private static bool CheckCarrySubtract()
+        {
+            return false; //TODO
+        }
         //DO NOT INCREMENT PC HERE! DO NOT INCREMENT PC HERE!
         public static readonly Opcode[] Table =
         {
 /*0x00*/    new Opcode("NOP",             0, (ref Registers regs, Memory mem) => { }),
-            new Opcode("LD BC, {0}",      2, (ref Registers regs, Memory mem) => { regs.BC = regs.Immediate16; }),
+            new Opcode("LD BC, d16",      2, (ref Registers regs, Memory mem) => { regs.BC = regs.Immediate16; }),
             new Opcode("LD (BC), A",      0, (ref Registers regs, Memory mem) => { mem[regs.BC] = regs.A; }),
             new Opcode("INC BC",          0, (ref Registers regs, Memory mem) => { regs.BC++; }),
-            new Opcode("INC B",           0, (ref Registers regs, Memory mem) => { regs.B++; }),
-            new Opcode("DEC B",           0, (ref Registers regs, Memory mem) => { regs.B--; }),
-            new Opcode("LD B, {0}",       1, (ref Registers regs, Memory mem) => { regs.B = regs.Immediate8; }),
-            new Opcode("RLC A",           0, (ref Registers regs, Memory mem) => { regs.A = (byte)((regs.A << 1) | (regs.A >> 7)); }),
-            new Opcode("LD ({0}), SP",    2, (ref Registers regs, Memory mem) => { mem.Write16(regs.Immediate16, regs.SP); }),
+            new Opcode("INC B",           0, (ref Registers regs, Memory mem) => { regs.B++; SetFlags(ref regs, regs.B == 0x00, false, CheckHalfCarryAdd(ref regs.B, 0x01), regs.CA); }),
+            new Opcode("DEC B",           0, (ref Registers regs, Memory mem) => { regs.B--; SetFlags(ref regs, regs.B == 0x00, true, CheckHalfCarrySubtract(ref regs.B, 0x01), regs.CA); }),
+            new Opcode("LD B, d8",        1, (ref Registers regs, Memory mem) => { regs.B = regs.Immediate8; }),
+            new Opcode("RLC A",           0, (ref Registers regs, Memory mem) => { SetFlags(ref regs, false, false, false, ((regs.A & 0x80) == 0x80)); regs.A = (byte)((regs.A << 1) | (regs.A >> 7)); }),
+            new Opcode("LD (d16), SP",    2, (ref Registers regs, Memory mem) => { mem.Write16(regs.Immediate16, regs.SP); }),
             new Opcode("ADD HL, BC",      0, (ref Registers regs, Memory mem) => { regs.HL += regs.BC; }),
             new Opcode("LD A, (BC)",      0, (ref Registers regs, Memory mem) => { regs.A = mem[regs.BC]; }),
             new Opcode("DEC BC",          0, (ref Registers regs, Memory mem) => { regs.BC--; }),
-            new Opcode("INC C",           0, (ref Registers regs, Memory mem) => { regs.C++; }),
-            new Opcode("DEC C",           0, (ref Registers regs, Memory mem) => { regs.C--; }),
-            new Opcode("LD C, {0}",       1, (ref Registers regs, Memory mem) => { regs.C = regs.Immediate8; }),
+            new Opcode("INC C",           0, (ref Registers regs, Memory mem) => { regs.C++; SetFlags(ref regs, regs.C == 0x00, false, CheckHalfCarryAdd(ref regs.C, 0x01), regs.CA); }),
+            new Opcode("DEC C",           0, (ref Registers regs, Memory mem) => { regs.C--; SetFlags(ref regs, regs.C == 0x00, true, CheckHalfCarrySubtract(ref regs.C, 0x01), regs.CA); }),
+            new Opcode("LD C, d8",        1, (ref Registers regs, Memory mem) => { regs.C = regs.Immediate8; }),
             new Opcode("RRC A",           0, (ref Registers regs, Memory mem) => { regs.A = (byte)((regs.A >> 1) | (regs.A << 7)); }),
 /*0x10*/    new Opcode("STOP",            0, (ref Registers regs, Memory mem) => { /*do nothing because the CPU should handle this*/ }),
-            new Opcode("LD DE, {0}",      2, (ref Registers regs, Memory mem) => { regs.DE = regs.Immediate16; }),
+            new Opcode("LD DE, d16",      2, (ref Registers regs, Memory mem) => { regs.DE = regs.Immediate16; }),
             new Opcode("LD (DE), A",      0, (ref Registers regs, Memory mem) => { mem[regs.DE] = regs.A; }),
             new Opcode("INC DE",          0, (ref Registers regs, Memory mem) => { regs.DE++; }),
             new Opcode("INC D",           0, (ref Registers regs, Memory mem) => { regs.D++; }),
@@ -37,8 +64,8 @@
             new Opcode("DEC E",           0, (ref Registers regs, Memory mem) => { regs.E--; }),
             new Opcode("LD E, {0}",       1, (ref Registers regs, Memory mem) => { regs.E = mem[regs.Immediate8]; }),
             new Opcode("RR A",            0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-/*0x20*/    new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+/*0x20*/    new Opcode("JR NZ, r8",       1, (ref Registers regs, Memory mem) => { if(regs.Z) return; if(regs.Immediate8 >= 128) regs.PC -= (ushort) (256 - regs.Immediate8); else regs.PC += regs.Immediate8; }),
+            new Opcode("LD HL, d16",      2, (ref Registers regs, Memory mem) => { regs.HL = regs.Immediate16; }),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
@@ -55,6 +82,7 @@
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
 /*0x30*/    new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("LDD (HL), A",     0, (ref Registers regs, Memory mem) => { mem.Write8(regs.HL, regs.A); regs.HL--; }),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
@@ -66,8 +94,7 @@
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("LD A, d8",        1, (ref Registers regs, Memory mem) => { regs.A = regs.Immediate8; }),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
 /*0x40*/    new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
@@ -180,7 +207,7 @@
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("XOR A",           0, (ref Registers regs, Memory mem) => { regs.A = 0x00; SetFlags(ref regs, true, false, false, false); }), //x ^ x always equals 0
 /*0xB0*/    new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
@@ -229,7 +256,7 @@
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-/*0xE0*/    new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+/*0xE0*/    new Opcode("LD $FF00+a8, A",  1, (ref Registers regs, Memory mem) => { mem.Write8(0xFF00 + regs.Immediate8, regs.A); }),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
@@ -245,7 +272,10 @@
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-/*0xF0*/    new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+/*0xF0*/    new Opcode("LD A, $FF00+d8",  1, (ref Registers regs, Memory mem) => { regs.A = mem.Read8(0xFF00 + regs.Immediate8); }),
+            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("DI",              0, (ref Registers regs, Memory mem) => { regs.Interrupts = false; }),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
@@ -256,10 +286,7 @@
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("CP A, 94",        1, (ref Registers regs, Memory mem) => { SetFlags(ref regs, regs.A - regs.Immediate8 == 0, true, CheckHalfCarrySubtract(ref regs.A, regs.Immediate8), CheckCarrySubtract()); }),
             new Opcode("UNIMP",           0, (ref Registers regs, Memory mem) => { /*TODO*/}),
         };
     }

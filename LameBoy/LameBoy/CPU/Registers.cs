@@ -2,6 +2,8 @@
 {
     public struct Registers
     {
+        public bool Interrupts;
+
         public byte A,
             B,
             C,
@@ -73,21 +75,21 @@
         {
             byte result = 0x00;
             if (S)
-                result += 0x80;
+                result |= 0x80;
             if (Z)
-                result += 0x40;
+                result |= 0x40;
             if (F5)
-                result += 0x20;
+                result |= 0x20;
             if (HC)
-                result += 0x10;
+                result |= 0x10;
             if (F3)
-                result += 0x08;
+                result |= 0x08;
             if (PV)
-                result += 0x04;
+                result |= 0x04;
             if (N)
-                result += 0x02;
+                result |= 0x02;
             if (CA)
-                result += 0x01;
+                result |= 0x01;
             return result;
         }
     }

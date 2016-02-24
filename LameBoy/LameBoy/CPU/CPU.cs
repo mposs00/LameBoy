@@ -23,15 +23,18 @@ namespace LameBoy
             {
                 instr = cart.Read8(registers.PC);
                 var opcode = OpcodeTable.Table[instr];
-                Console.WriteLine("PC: ${0:X4} Disasm: {1}", registers.PC, opcode.Disassembly);
-                if (opcode.Disassembly == "UNIMP")
-                    Console.WriteLine("Unimplemented opcode: {0:X2}", instr);
                 registers.Immediate8 = cart.Read8(registers.PC + 1);
                 registers.Immediate16 = cart.Read16(registers.PC + 1);
-                opcode.Execute(ref registers, cart.RAM);
+                Console.WriteLine("PC: ${0:X4} Disasm: {1} Direct8: {2:X2} Direct16: {3:X4} Opcode: {4:X2}", registers.PC, opcode.Disassembly, registers.Immediate8, registers.Immediate16, instr);
+                if (opcode.Disassembly == "UNIMP")
+                {
+                    Console.WriteLine("Unimplemented opcode: {0:X2}", instr);
+                    Console.ReadLine();
+                }
                 registers.PC += opcode.Length;
                 registers.PC++;
-                Console.ReadLine();
+                opcode.Execute(ref registers, cart.RAM);
+                //Console.ReadLine();
             }
         }
     }
