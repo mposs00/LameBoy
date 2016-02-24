@@ -40,7 +40,8 @@ namespace LameBoy
     public class Cart
     {
         string romName;
-        Memory ROM, RAM;
+        Memory ROM;
+        public Memory RAM { get; private set; }
 
         public Cart(string romName)
         {

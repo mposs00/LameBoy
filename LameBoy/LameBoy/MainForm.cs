@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LameBoy
@@ -43,6 +44,17 @@ namespace LameBoy
         private void Application_Idle(object sender, EventArgs e)
         {
             rt.Render();
+        }
+
+        private void menuItemOpenRom_Click(object sender, EventArgs e)
+        {
+            Cart cart = new Cart(@"C:\Users\Denton\Desktop\gb stuff\tetris.gb");
+
+            CPU cpu = new CPU(cart);
+            Console.WriteLine(cart.GetCartType());
+
+            Thread cputhread = new Thread(new ThreadStart(cpu.exec));
+            cputhread.Start();
         }
     }
 }

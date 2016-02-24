@@ -47,7 +47,9 @@
   <ItemGroup>
     <Compile Include="Cart.cs" />
     <Compile Include="CPU\CPU.cs" />
+    <Compile Include="CPU\Memory.cs" />
     <Compile Include="CPU\Opcode.cs" />
+    <Compile Include="CPU\OpcodeTable.cs" />
     <Compile Include="CPU\Registers.cs" />
     <Compile Include="Graphics\SDLException.cs" />
     <Compile Include="Graphics\SDLRuntime.cs" />
