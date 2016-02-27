@@ -34,63 +34,27 @@
 
         private void byteToFlags(byte conv)
         {
-            //I don't know any better way to do this
-            //Can you convert each bit into a bool?
-            //That would be fantastic
-            if ((conv & 0x80) == 0x80)
-                S = true;
-            else
-                S = false;
-            if ((conv & 0x40) == 0x40)
-                Z = true;
-            else
-                Z = false;
-            if ((conv & 0x20) == 0x20)
-                F5 = true;
-            else
-                F5 = false;
-            if ((conv & 0x10) == 0x10)
-                HC = true;
-            else
-                HC = false;
-            if ((conv & 0x08) == 0x08)
-                F3 = true;
-            else
-                F3 = false;
-            if ((conv & 0x04) == 0x04)
-                PV = true;
-            else
-                PV = false;
-            if ((conv & 0x02) == 0x02)
-                N = true;
-            else
-                N = false;
-            if ((conv & 0x01) == 0x01)
-                CA = true;
-            else
-                CA = false;
+            S =  (conv & 0x80) == 0x80;
+            Z =  (conv & 0x40) == 0x40;
+            F5 = (conv & 0x20) == 0x20;
+            HC = (conv & 0x10) == 0x10;
+            F3 = (conv & 0x08) == 0x08;
+            PV = (conv & 0x04) == 0x04;
+            N =  (conv & 0x02) == 0x02;
+            CA = (conv & 0x01) == 0x01;
         }
 
         private byte flagsToByte()
         {
-            byte result = 0x00;
-            if (S)
-                result |= 0x80;
-            if (Z)
-                result |= 0x40;
-            if (F5)
-                result |= 0x20;
-            if (HC)
-                result |= 0x10;
-            if (F3)
-                result |= 0x08;
-            if (PV)
-                result |= 0x04;
-            if (N)
-                result |= 0x02;
-            if (CA)
-                result |= 0x01;
-            return result;
+            return (byte)(
+                (S  ? 0x80 : 0) |
+                (Z  ? 0x40 : 0) |
+                (F5 ? 0x20 : 0) |
+                (HC ? 0x10 : 0) |
+                (F3 ? 0x08 : 0) |
+                (PV ? 0x04 : 0) |
+                (N  ? 0x02 : 0) |
+                (CA ? 0x01 : 0));
         }
     }
 }
