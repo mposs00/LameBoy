@@ -13,7 +13,7 @@ namespace LameBoy
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern IntPtr FindWindow(string className, string windowName);
-
+        
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool ShowWindow(IntPtr handle, uint command);
 
@@ -48,13 +48,24 @@ namespace LameBoy
 
         private void menuItemOpenRom_Click(object sender, EventArgs e)
         {
-            Cart cart = new Cart(@"C:\Users\Denton\Desktop\gb stuff\tetris.gb");
+            OpenFileDialog fd = new OpenFileDialog();
 
-            CPU cpu = new CPU(cart);
-            Console.WriteLine(cart.GetCartType());
+            fd.Filter = "ゲームボーイ ROMs (*.gb, *.gbc, *.bin, *.rom)|*.gb;*.gbc;*.bin;*.rom|All Files (*.*)|*.*";
+            fd.FilterIndex = 1;
 
-            Thread cputhread = new Thread(new ThreadStart(cpu.exec));
-            cputhread.Start();
+            fd.Multiselect = false;
+
+            var okSelected = fd.ShowDialog();
+            if (okSelected == DialogResult.OK)
+            {
+                Cart cart = new Cart(fd.FileName);
+
+                CPU cpu = new CPU(cart);
+                Console.WriteLine(cart.GetCartType());
+
+                Thread cputhread = new Thread(new ThreadStart(cpu.exec));
+                cputhread.Start();
+            }
         }
     }
 }

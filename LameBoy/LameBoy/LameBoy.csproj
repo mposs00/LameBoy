@@ -51,6 +51,7 @@
     <Compile Include="CPU\Opcode.cs" />
     <Compile Include="CPU\OpcodeTable.cs" />
     <Compile Include="CPU\Registers.cs" />
+    <Compile Include="Graphics\GPU.cs" />
     <Compile Include="Graphics\SDLException.cs" />
     <Compile Include="Graphics\SDLRuntime.cs" />
     <Compile Include="MainForm.cs">
@@ -74,6 +75,7 @@
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -9,7 +9,7 @@ namespace LameBoy
 {
     class Program
     {
-        [MTAThread]
+        [STAThread]
         static void Main(string[] args)
         {
             //TODO: Include test ROMs for the time being

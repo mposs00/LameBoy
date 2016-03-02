@@ -94,14 +94,14 @@
             this.panelGraphics.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelGraphics.Location = new System.Drawing.Point(0, 0);
             this.panelGraphics.Name = "panelGraphics";
-            this.panelGraphics.Size = new System.Drawing.Size(160, 84);
+            this.panelGraphics.Size = new System.Drawing.Size(160, 44);
             this.panelGraphics.TabIndex = 0;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(160, 84);
+            this.ClientSize = new System.Drawing.Size(160, 44);
             this.Controls.Add(this.panelGraphics);
             this.MaximizeBox = false;
             this.Menu = this.mainMenu1;
