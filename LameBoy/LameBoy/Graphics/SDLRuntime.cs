@@ -19,7 +19,7 @@ namespace LameBoy.Graphics
         }
         public IntPtr Renderer;
         public byte[,] pixels;
-        int scale = 5;
+        public int scale = 5;
 
         public SDLRuntime(GPU gpu)
         {

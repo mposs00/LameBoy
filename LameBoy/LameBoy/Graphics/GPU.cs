@@ -33,9 +33,9 @@ namespace LameBoy.Graphics
             }
         }
         
-        private byte[,] DecodeSprite(byte[] sprite)
+        private byte[,] DecodeTile(byte[] tile)
         {
-            BitArray spriteBits = new BitArray(sprite);
+            BitArray tileBits = new BitArray(tile);
             byte[,] lines = new byte[8, 8];
             for (int y = 0; y < 8; y++)
             {
@@ -43,8 +43,8 @@ namespace LameBoy.Graphics
                 {
                     int highBitPos = ((7 - x) + 8 + (y * 16));
                     int lowBitPos = (7 - x) + (y * 16);
-                    byte high = (byte)(Convert.ToByte(spriteBits.Get(highBitPos)) << 1);
-                    byte low = Convert.ToByte(spriteBits.Get(lowBitPos));
+                    byte high = (byte)(Convert.ToByte(tileBits.Get(highBitPos)) << 1);
+                    byte low = Convert.ToByte(tileBits.Get(lowBitPos));
                     byte color = (byte)(high | low);
                     lines[y, x] = color;
                 }
@@ -55,6 +55,24 @@ namespace LameBoy.Graphics
         private void PushFrame()
         {
             sdlt.rt.SetPixels(frame);
+        }
+
+        private void DrawTile(byte[,] tile, int yCoord, int xCoord)
+        {
+            for (int y = 0; y < 144; y++)
+            {
+                for (int x = 0; x < 160; x++)
+                {
+                    if ((y > yCoord - 1 && y < yCoord + 8) && (x > xCoord - 1 && x < xCoord + 8))
+                    {
+                        frame[x, y] = tile[y - yCoord, x - xCoord];
+                    }
+                    else
+                    {
+                        frame[x, y] = 0;
+                    }
+                }
+            }
         }
 
         public void RenderScene()
@@ -76,29 +94,18 @@ namespace LameBoy.Graphics
                 else
                 {
                     //Render the scene here
-                    byte[] sprite = new byte[16];
+                    //Once CPU is implemented, this will copy each tile object from
+                    //VRAM into a byte array, and each will be rendered according to
+                    //data stored in OAM
+                    byte[] tile = new byte[16];
                     for(int i = 0; i < 16; i++)
                     {
                         //4329 = 1
                         //378F = square block
-                        sprite[i] = cart.Read8(0x378F + i);
+                        tile[i] = cart.Read8(0x378F + i);
                     }
 
-                    byte[,] testSprite = DecodeSprite(sprite);
-                    for (int y = 0; y < 144; y++)
-                    {
-                        for (int x = 0; x < 160; x++)
-                        {
-                            if(y < 8 && x < 8)
-                            {
-                                frame[x, y] = testSprite[y, x];
-                            }
-                            else
-                            {
-                                frame[x, y] = 0;
-                            }
-                        }
-                    }
+                    DrawTile(DecodeTile(tile), 5, 12);
 
                     PushFrame();
                 }
