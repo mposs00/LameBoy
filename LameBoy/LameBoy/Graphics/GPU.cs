@@ -35,21 +35,18 @@ namespace LameBoy.Graphics
         
         private byte[,] DecodeSprite(byte[] sprite)
         {
-
-            //TODO: Fix endianness (IMPORTANT)
             BitArray spriteBits = new BitArray(sprite);
             byte[,] lines = new byte[8, 8];
             for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++)
                 {
-                    int highBitPos = (x + 8 + (y * 16));
-                    int lowBitPos = x + (y * 16);
+                    int highBitPos = ((7 - x) + 8 + (y * 16));
+                    int lowBitPos = (7 - x) + (y * 16);
                     byte high = (byte)(Convert.ToByte(spriteBits.Get(highBitPos)) << 1);
                     byte low = Convert.ToByte(spriteBits.Get(lowBitPos));
                     byte color = (byte)(high | low);
                     lines[y, x] = color;
-                    lines[x, 1] = (byte)((Convert.ToByte(spriteBits.Get(x + 24)) << 1) | (Convert.ToByte(spriteBits.Get(x + 16))));
                 }
             }
             return lines;
@@ -82,7 +79,9 @@ namespace LameBoy.Graphics
                     byte[] sprite = new byte[16];
                     for(int i = 0; i < 16; i++)
                     {
-                        sprite[i] = cart.Read8(0x587C + i);
+                        //4329 = 1
+                        //378F = square block
+                        sprite[i] = cart.Read8(0x378F + i);
                     }
 
                     byte[,] testSprite = DecodeSprite(sprite);
