@@ -101,6 +101,8 @@ namespace LameBoy.Graphics
                     //Once CPU is implemented, this will copy each tile object from
                     //VRAM into a byte array, and each will be rendered according to
                     //data stored in OAM
+
+                    //Copy tiles
                     for (int n = 0; n < 0xFF; n++)
                     {
                         byte[] tile = new byte[16];
@@ -113,6 +115,7 @@ namespace LameBoy.Graphics
                         tiles.Add(DecodeTile(tile));
                     }
 
+                    //Render background
                     for(int y = 0; y < 0x20; y++)
                     {
                         for(int x = 0; x < 0x20; x++)
@@ -122,12 +125,29 @@ namespace LameBoy.Graphics
                                 DrawTile(tile, x * 8, y * 8);
                         }
                     }
+                    
+                    //Copy OAM
+                    byte[,] OAM = new byte[40, 4];
+                    for (int i = 0; i <= 0x9C; i += 4)
+                    {
+                        for(int n = 0; n < 4; n++)
+                        {
+                            OAM[(int)(i / 4), n] = cart.Read8(0xFE00 + i + n);
+                        }
+                    }
 
-                    //for(int n = 0; n < 0xFF; n++)
-                   // {
-                        //byte[,] tile = tiles.ElementAt(n);
-                        //DrawTile(tile, (n * 8) % 160, ((int) n / 20) * 8);
-                    //}
+                    //Draw OAM
+                    for (int i = 0; i < 40; i++)
+                    {
+                        byte OAMY = OAM[i, 0];
+                        byte OAMX = OAM[i, 1];
+                        byte OAMTile = OAM[i, 2];
+                        byte OAMFlags = OAM[i, 3];
+                        if((OAMFlags & 0x80) == 0x80)
+                        {
+                            DrawTile(tiles.ElementAt(OAMTile), OAMX - 8, OAMY - 16);
+                        }
+                    }
 
                     PushFrame();
                 }
