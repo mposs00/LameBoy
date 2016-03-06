@@ -13,6 +13,7 @@ namespace LameBoy.Graphics
         Cart cart;
         byte[,] frame;
         List<byte[,]> tiles;
+        public bool drawing = false;
 
         public GPU(IntPtr Handle, IntPtr pgHandle)
         {
@@ -83,6 +84,7 @@ namespace LameBoy.Graphics
         {
             while (true)
             {
+                drawing = true;
                 if (cart == null)
                 {
                     //This just fills the frame buffer with junk, to test it
@@ -148,8 +150,8 @@ namespace LameBoy.Graphics
                             DrawTile(tiles.ElementAt(OAMTile), OAMX - 8, OAMY - 16);
                         }
                     }
-
                     PushFrame();
+                    drawing = false;
                 }
             }
         }
