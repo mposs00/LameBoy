@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using SDL2;
@@ -11,6 +12,7 @@ namespace LameBoy.Graphics
         SDLThread sdlt;
         Cart cart;
         byte[,] frame;
+        List<byte[,]> tiles;
 
         public GPU(IntPtr Handle, IntPtr pgHandle)
         {
@@ -18,6 +20,7 @@ namespace LameBoy.Graphics
             Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
             sdlThread.Start();
             frame = new byte[160,144];
+            tiles = new List<byte[,]>();
         }
 
         public void SetCPUExecutionState(bool state)
@@ -62,7 +65,7 @@ namespace LameBoy.Graphics
             sdlt.rt.SetPixels(frame);
         }
 
-        private void DrawTile(byte[,] tile, int yCoord, int xCoord)
+        private void DrawTile(byte[,] tile, int xCoord, int yCoord)
         {
             for (int y = 0; y < 144; y++)
             {
@@ -72,10 +75,6 @@ namespace LameBoy.Graphics
                     {
                         frame[x, y] = tile[y - yCoord, x - xCoord];
                     }
-                    else
-                    {
-                        frame[x, y] = 0;
-                    }
                 }
             }
         }
@@ -84,7 +83,7 @@ namespace LameBoy.Graphics
         {
             while (true)
             {
-                if(cart == null)
+                if (cart == null)
                 {
                     //This just fills the frame buffer with junk, to test it
                     for (int y = 0; y < 144; y++)
@@ -102,15 +101,33 @@ namespace LameBoy.Graphics
                     //Once CPU is implemented, this will copy each tile object from
                     //VRAM into a byte array, and each will be rendered according to
                     //data stored in OAM
-                    byte[] tile = new byte[16];
-                    for(int i = 0; i < 16; i++)
+                    for (int n = 0; n < 0xFF; n++)
                     {
-                        //4329 = 1
-                        //378F = square block
-                        tile[i] = cart.Read8(0x378F + i);
+                        byte[] tile = new byte[16];
+                        for (int i = 0; i < 16; i++)
+                        {
+                            //4329 = 1
+                            //378F = square block
+                            tile[i] = cart.Read8(0x8000 + (n * 0x10) + i);
+                        }
+                        tiles.Add(DecodeTile(tile));
                     }
 
-                    DrawTile(DecodeTile(tile), 5, 12);
+                    for(int y = 0; y < 0x20; y++)
+                    {
+                        for(int x = 0; x < 0x20; x++)
+                        {
+                            byte[,] tile = tiles.ElementAt(cart.Read8(0x9800 + x + (y * 0x20)));
+                            if(x < 0x14 && y < 0x14)
+                                DrawTile(tile, x * 8, y * 8);
+                        }
+                    }
+
+                    //for(int n = 0; n < 0xFF; n++)
+                   // {
+                        //byte[,] tile = tiles.ElementAt(n);
+                        //DrawTile(tile, (n * 8) % 160, ((int) n / 20) * 8);
+                    //}
 
                     PushFrame();
                 }
