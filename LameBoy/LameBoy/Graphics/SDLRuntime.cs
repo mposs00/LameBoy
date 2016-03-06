@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using static SDL2.SDL;
 
@@ -47,11 +48,10 @@ namespace LameBoy.Graphics
             pixels = source;
         }
 
-        public unsafe void Render()
+        public void Render()
         {
             while(CPUexecuting){ }
-            SDL_Surface* surfPtr = (SDL_Surface*) Surface.ToPointer();
-            SDL_Surface surf = *surfPtr;
+            SDL_Surface surf = (SDL_Surface)Marshal.PtrToStructure(Surface, typeof(SDL_Surface));
 
             if (pixels == null)
                 return;
