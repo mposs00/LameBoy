@@ -20,7 +20,7 @@ namespace LameBoy.Graphics
         }
         public IntPtr Renderer;
         public byte[,] pixels;
-        public int scale = 5;
+        public int scale = 3;
         public bool CPUexecuting = false;
 
         public SDLRuntime(GPU gpu)
@@ -60,17 +60,33 @@ namespace LameBoy.Graphics
             {
                 for(int x = 0; x < 160; x++)
                 {
-                    byte color;
+                    byte r, g, b;
                     if (pixels[x, y] == 0)
-                        color = 255;
+                    {
+                        r = 156;
+                        g = 189;
+                        b = 15;
+                    }
                     else if (pixels[x, y] == 1)
-                        color = 196;
+                    {
+                        r = 140;
+                        g = 173;
+                        b = 15;
+                    }
                     else if (pixels[x, y] == 2)
-                        color = 127;
+                    {
+                        r = 48;
+                        g = 98;
+                        b = 48;
+                    }
                     else
-                        color = 0;
+                    {
+                        r = 15;
+                        g = 56;
+                        b = 15;
+                    }
                     var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
-                    SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, color, color, color, 255));
+                    SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, r, g, b, 255));
                 }
                 gpu.UpdateYCounter((byte) y);
             }
