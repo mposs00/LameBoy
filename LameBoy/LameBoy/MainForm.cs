@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -36,6 +37,12 @@ namespace LameBoy
                 cpu.SetCart(cart);
 
                 Console.WriteLine(cart.GetCartType());
+
+                if(File.ReadAllBytes(fd.FileName).Length == 0xFFFF && cart.GetCartType() == CartType.ROM)
+                {
+                    //Doesn't execute CPU when loading a ramdump
+                    return;
+                }
 
                 Thread cputhread = new Thread(new ThreadStart(cpu.exec));
                 cputhread.Start();

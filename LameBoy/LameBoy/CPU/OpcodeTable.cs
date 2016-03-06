@@ -81,7 +81,7 @@
             new Opcode("LD E, 0x{0:X2}",  1, 2,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("RRA",             0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
 /*0x30*/    new Opcode("JR NC,r8",        1, 2, 8,    (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("LD SP,0x{0:X4}",  1, 3, 12,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("LD SP,0x{0:X4}",  2, 3, 12,   (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("LDD (HL), A",     0, 2,    (ref Registers regs, Memory mem) => { mem.Write8(regs.HL, regs.A); regs.HL--; }),
             new Opcode("INC SP",          0, 1, 8,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
