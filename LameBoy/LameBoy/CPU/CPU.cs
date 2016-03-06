@@ -34,6 +34,7 @@ namespace LameBoy
         {
             while (true)
             {
+                gpu.SetCPUExecutionState(true);
                 instr = cart.Read8(registers.PC);
                 var opcode = OpcodeTable.Table[instr];
                 registers.Immediate8 = cart.Read8(registers.PC + 1);
@@ -49,13 +50,14 @@ namespace LameBoy
                 }
                 if (opcode.Disassembly == "UNIMP")
                 {
-                    //debugOut = true;
+                    debugOut = true;
                     Console.WriteLine("Unimplemented opcode: {0:X2}", instr);
                     Console.ReadLine();
                 }
                 registers.PC += opcode.Length;
                 registers.PC++;
                 opcode.Execute(ref registers, cart.RAM);
+                gpu.SetCPUExecutionState(false);
             }
         }
     }

@@ -20,6 +20,11 @@ namespace LameBoy.Graphics
             frame = new byte[160,144];
         }
 
+        public void SetCPUExecutionState(bool state)
+        {
+            sdlt.rt.CPUexecuting = state;
+        }
+
         public void SetCart(Cart NewCart)
         {
             cart = NewCart;

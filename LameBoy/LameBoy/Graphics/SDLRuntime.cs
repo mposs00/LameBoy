@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using static SDL2.SDL;
 
 namespace LameBoy.Graphics
@@ -20,6 +21,7 @@ namespace LameBoy.Graphics
         public IntPtr Renderer;
         public byte[,] pixels;
         public int scale = 5;
+        public bool CPUexecuting = false;
 
         public SDLRuntime(GPU gpu)
         {
@@ -47,6 +49,7 @@ namespace LameBoy.Graphics
 
         public unsafe void Render()
         {
+            while(CPUexecuting){ }
             SDL_Surface* surfPtr = (SDL_Surface*) Surface.ToPointer();
             SDL_Surface surf = *surfPtr;
 
