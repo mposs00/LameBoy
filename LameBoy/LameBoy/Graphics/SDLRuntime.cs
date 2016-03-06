@@ -63,27 +63,31 @@ namespace LameBoy.Graphics
                     byte r, g, b;
                     if (pixels[x, y] == 0)
                     {
-                        r = 156;
-                        g = 189;
-                        b = 15;
+                        //e0f8d0
+                        r = 0xE0;
+                        g = 0xF8;
+                        b = 0xD0;
                     }
                     else if (pixels[x, y] == 1)
                     {
-                        r = 140;
-                        g = 173;
-                        b = 15;
+                        //88c070
+                        r = 0x88;
+                        g = 0xC0;
+                        b = 0x70;
                     }
                     else if (pixels[x, y] == 2)
                     {
-                        r = 48;
-                        g = 98;
-                        b = 48;
+                        //346856
+                        r = 0x34;
+                        g = 0x68;
+                        b = 0x56;
                     }
                     else
                     {
-                        r = 15;
-                        g = 56;
-                        b = 15;
+                        //081820
+                        r = 08;
+                        g = 18;
+                        b = 20;
                     }
                     var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
                     SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, r, g, b, 255));
