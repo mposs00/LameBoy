@@ -10,6 +10,7 @@ namespace LameBoy
         //bool interruptsEnabled = true;
         Cart cart;
         byte instr;
+        bool debugOut = false;
 
         public CPU(Cart cart)
         {
@@ -25,12 +26,15 @@ namespace LameBoy
                 var opcode = OpcodeTable.Table[instr];
                 registers.Immediate8 = cart.Read8(registers.PC + 1);
                 registers.Immediate16 = cart.Read16(registers.PC + 1);
-                string disasm = opcode.Disassembly;
-                if (disasm.Contains("X4"))
-                    disasm = String.Format(disasm, registers.Immediate16);
-                else if (disasm.Contains("X2"))
-                    disasm = String.Format(disasm, registers.Immediate8);
-                Console.WriteLine("PC: ${0:X4} Disasm: {1} Opcode: {2:X2}", registers.PC, disasm, instr);
+                if (debugOut)
+                {
+                    string disasm = opcode.Disassembly;
+                    if (disasm.Contains("X4"))
+                        disasm = String.Format(disasm, registers.Immediate16);
+                    else if (disasm.Contains("X2"))
+                        disasm = String.Format(disasm, registers.Immediate8);
+                    Console.WriteLine("PC: ${0:X4} Disasm: {1} Opcode: {2:X2}", registers.PC, disasm, instr);
+                }
                 if (opcode.Disassembly == "UNIMP")
                 {
                     Console.WriteLine("Unimplemented opcode: {0:X2}", instr);
@@ -39,7 +43,7 @@ namespace LameBoy
                 registers.PC += opcode.Length;
                 registers.PC++;
                 opcode.Execute(ref registers, cart.RAM);
-                Console.ReadLine();
+                //Console.ReadLine();
             }
         }
     }

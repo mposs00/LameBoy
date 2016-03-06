@@ -16,6 +16,8 @@ namespace LameBoy.Graphics
                 return wminfo.info.win.window;
             }
         }
+        public IntPtr Renderer;
+        public byte[] pixels;
 
         public void Initialize()
         {
@@ -28,15 +30,45 @@ namespace LameBoy.Graphics
                 throw new SDLException();
 
             Surface = SDL_GetWindowSurface(Window);
+            Renderer = SDL_GetRenderer(Window);
         }
 
-        public void Render()
+        public void SetPixels(byte[] source)
         {
-            IntPtr testSurf = SDL_CreateRGBSurface(SDL_PIXELFORMAT_RGB888, 160, 144, 1, 255, 0, 255, 255);
-            var rect = new SDL_Rect { x = 0, y = 0, w = 160, h = 144 };
-            SDL_BlitSurface(testSurf, ref rect, Surface, ref rect);
+            pixels = source;
+        }
+
+        public unsafe void Render()
+        {
+            SDL_Surface* surfPtr = (SDL_Surface*) Surface.ToPointer();
+            SDL_Surface surf = *surfPtr;
+
+            //This just fills the frame buffer with junk, to test it
+            Random r = new Random();
+            pixels = new byte[160 * 144];
+            for (int y = 0; y <= 144; y++)
+            {
+                for (int x = 0; x <= 160; x++)
+                {
+                    pixels[(y * 144) + x] = (byte)(r.Next() % 2);
+                }
+            }
+
+            //Todo: proper colors
+            for (int y = 0; y <= 144; y++)
+            {
+                for(int x = 0; x <= 160; x++)
+                {
+                    byte color;
+                    if (pixels[(y * 144) + x] == 0)
+                        color = 0;
+                    else
+                        color = 255;
+                    var rect = new SDL_Rect { x = x, y = y, w = 1, h = 1 };
+                    SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, color, color, color, 255));
+                }
+            }
             SDL_UpdateWindowSurface(Window);
-            SDL_FreeSurface(testSurf);
         }
 
         public void Destroy()
