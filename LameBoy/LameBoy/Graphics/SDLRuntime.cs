@@ -17,7 +17,8 @@ namespace LameBoy.Graphics
             }
         }
         public IntPtr Renderer;
-        public byte[] pixels;
+        public byte[,] pixels;
+        int scale = 5;
 
         public void Initialize()
         {
@@ -25,7 +26,7 @@ namespace LameBoy.Graphics
             if (success < 0)
                 throw new SDLException();
 
-            Window = SDL_CreateWindow("LameBoy", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 160, 144, SDL_WindowFlags.SDL_WINDOW_BORDERLESS);
+            Window = SDL_CreateWindow("LameBoy", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 720, SDL_WindowFlags.SDL_WINDOW_BORDERLESS);
             if (Window == null)
                 throw new SDLException();
 
@@ -33,7 +34,7 @@ namespace LameBoy.Graphics
             Renderer = SDL_GetRenderer(Window);
         }
 
-        public void SetPixels(byte[] source)
+        public void SetPixels(byte[,] source)
         {
             pixels = source;
         }
@@ -44,27 +45,27 @@ namespace LameBoy.Graphics
             SDL_Surface surf = *surfPtr;
 
             //This just fills the frame buffer with junk, to test it
-            Random r = new Random();
-            pixels = new byte[160 * 144];
-            for (int y = 0; y <= 144; y++)
+            //Random r = new Random();
+            pixels = new byte[160 , 144];
+            for (int y = 0; y < 144; y++)
             {
-                for (int x = 0; x <= 160; x++)
+                for (int x = 0; x < 160; x++)
                 {
-                    pixels[(y * 144) + x] = (byte)(r.Next() % 2);
+                    pixels[x , y] = (byte)((x) % 2);
                 }
             }
 
             //Todo: proper colors
-            for (int y = 0; y <= 144; y++)
+            for (int y = 0; y < 144; y++)
             {
-                for(int x = 0; x <= 160; x++)
+                for(int x = 0; x < 160; x++)
                 {
                     byte color;
-                    if (pixels[(y * 144) + x] == 0)
+                    if (pixels[x , y] == 0)
                         color = 0;
                     else
                         color = 255;
-                    var rect = new SDL_Rect { x = x, y = y, w = 1, h = 1 };
+                    var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
                     SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, color, color, color, 255));
                 }
             }
