@@ -8,7 +8,7 @@ namespace LameBoy
 {
     public partial class MainForm : Form
     {
-        Graphics.SDLThread sdlt;
+        CPU cpu;
 
         public MainForm()
         {
@@ -17,9 +17,7 @@ namespace LameBoy
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            sdlt = new Graphics.SDLThread(Handle, panelGraphics.Handle);
-            Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
-            sdlThread.Start();
+            cpu = new CPU(Handle, panelGraphics.Handle);
         }
 
         private void menuItemOpenRom_Click(object sender, EventArgs e)
@@ -35,8 +33,8 @@ namespace LameBoy
             if (okSelected == DialogResult.OK)
             {
                 Cart cart = new Cart(fd.FileName);
+                cpu.SetCart(cart);
 
-                CPU cpu = new CPU(cart);
                 Console.WriteLine(cart.GetCartType());
 
                 Thread cputhread = new Thread(new ThreadStart(cpu.exec));

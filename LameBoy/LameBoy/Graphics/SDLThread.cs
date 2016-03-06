@@ -22,11 +22,13 @@ namespace LameBoy.Graphics
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr handle, IntPtr handleAfter, int x, int y, int cx, int cy, uint flags);
 
-        SDLRuntime rt = new SDLRuntime();
+        public SDLRuntime rt;
+        GPU gpu;
 
-        public SDLThread(IntPtr Handle, IntPtr pgHandle)
+        public SDLThread(IntPtr Handle, IntPtr pgHandle, GPU gpu)
         {
-            rt = new Graphics.SDLRuntime();
+            this.gpu = gpu;
+            rt = new SDLRuntime(gpu);
             rt.Initialize();
 
             IntPtr rtHandle = rt.Handle;

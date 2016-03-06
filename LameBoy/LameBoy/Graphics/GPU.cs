@@ -1,15 +1,57 @@
 ﻿using System;
+using System.Threading;
+using SDL2;
 
-namespace LameBoy
+namespace LameBoy.Graphics
 {
-    class GPU
+    public class GPU
     {
-        Memory frameBuffer;
+        SDLThread sdlt;
+        Cart cart;
+        byte[,] frame;
 
-        //Makes a GPU for a 160x144 screen, with an RGBA framebuffer
-        public GPU()
+        public GPU(IntPtr Handle, IntPtr pgHandle)
         {
-            frameBuffer = new Memory(160 * 144 * 4);
+            sdlt = new SDLThread(Handle, pgHandle, this);
+            Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
+            sdlThread.Start();
+            frame = new byte[160,144];
+        }
+
+        public void SetCart(Cart NewCart)
+        {
+            cart = NewCart;
+        }
+
+        public void UpdateYCounter(byte count)
+        {
+            if(cart != null)
+            {
+                cart.Write8(0xFF44, count);
+            }
+        }
+
+        public void RenderScene()
+        {
+            while (true)
+            {
+                if(cart == null)
+                {
+                    //This just fills the frame buffer with junk, to test it
+                    for (int y = 0; y < 144; y++)
+                    {
+                        for (int x = 0; x < 160; x++)
+                        {
+                            frame[x, y] = (byte)((x + y) % 4);
+                        }
+                    }
+                    sdlt.rt.SetPixels(frame);
+                }
+                else
+                {
+                    //Render the scene here
+                }
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ namespace LameBoy.Graphics
 {
     public class SDLRuntime
     {
+        GPU gpu;
         public IntPtr Window { get; private set; }
         public IntPtr Surface { get; private set; }
         public IntPtr Handle {
@@ -19,6 +20,11 @@ namespace LameBoy.Graphics
         public IntPtr Renderer;
         public byte[,] pixels;
         int scale = 5;
+
+        public SDLRuntime(GPU gpu)
+        {
+            this.gpu = gpu;
+        }
 
         public void Initialize()
         {
@@ -44,30 +50,31 @@ namespace LameBoy.Graphics
             SDL_Surface* surfPtr = (SDL_Surface*) Surface.ToPointer();
             SDL_Surface surf = *surfPtr;
 
-            //This just fills the frame buffer with junk, to test it
-            //Random r = new Random();
-            pixels = new byte[160 , 144];
-            for (int y = 0; y < 144; y++)
-            {
-                for (int x = 0; x < 160; x++)
-                {
-                    pixels[x , y] = (byte)((x) % 2);
-                }
-            }
+            if (pixels == null)
+                return;
 
-            //Todo: proper colors
             for (int y = 0; y < 144; y++)
             {
                 for(int x = 0; x < 160; x++)
                 {
                     byte color;
-                    if (pixels[x , y] == 0)
-                        color = 0;
-                    else
+                    if (pixels[x, y] == 0)
                         color = 255;
+                    else if (pixels[x, y] == 1)
+                        color = 196;
+                    else if (pixels[x, y] == 2)
+                        color = 127;
+                    else
+                        color = 0;
                     var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
                     SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, color, color, color, 255));
                 }
+                gpu.UpdateYCounter((byte) y);
+            }
+            //VBlank Lines
+            for(byte y = 143; y < 155; y++)
+            {
+                gpu.UpdateYCounter(y);
             }
             SDL_UpdateWindowSurface(Window);
         }

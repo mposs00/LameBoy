@@ -1,5 +1,7 @@
 ﻿using System;
+using LameBoy.Graphics;
 using System.Diagnostics;
+using System.Threading;
 
 namespace LameBoy
 {
@@ -9,12 +11,22 @@ namespace LameBoy
 
         //bool interruptsEnabled = true;
         Cart cart;
+        GPU gpu;
         byte instr;
         bool debugOut = false;
 
-        public CPU(Cart cart)
+        public CPU(IntPtr Handle, IntPtr pgHandle)
         {
-            this.cart = cart;
+            gpu = new GPU(Handle, pgHandle);
+            Thread GPUThread = new Thread(new ThreadStart(gpu.RenderScene));
+            GPUThread.Start();
+            //Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
+        }
+
+        public void SetCart(Cart NewCart)
+        {
+            cart = NewCart;
+            gpu.SetCart(cart);
         }
 
         //Main interpreter loop
@@ -37,13 +49,13 @@ namespace LameBoy
                 }
                 if (opcode.Disassembly == "UNIMP")
                 {
+                    //debugOut = true;
                     Console.WriteLine("Unimplemented opcode: {0:X2}", instr);
                     Console.ReadLine();
                 }
                 registers.PC += opcode.Length;
                 registers.PC++;
                 opcode.Execute(ref registers, cart.RAM);
-                //Console.ReadLine();
             }
         }
     }
