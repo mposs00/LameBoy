@@ -36,7 +36,7 @@ namespace LameBoy
         {
             OpenFileDialog fd = new OpenFileDialog();
 
-            fd.Filter = "ゲームボーイ ROMs (*.gb, *.gbc, *.bin, *.rom)|*.gb;*.gbc;*.bin;*.rom|All Files (*.*)|*.*";
+            fd.Filter = "Game Boy ROMs (*.gb, *.gbc, *.bin, *.rom)|*.gb;*.gbc;*.bin;*.rom|All Files (*.*)|*.*";
             fd.FilterIndex = 1;
 
             fd.Multiselect = false;
