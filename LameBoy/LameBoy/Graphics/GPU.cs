@@ -27,6 +27,11 @@ namespace LameBoy.Graphics
             running = true;
         }
 
+        public void Shutdown()
+        {
+            sdlt.Terminate();
+        }
+
         public void SetScale(int scale)
         {
             sdlt.rt.scale = scale;

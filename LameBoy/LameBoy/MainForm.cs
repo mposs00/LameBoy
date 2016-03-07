@@ -31,6 +31,7 @@ namespace LameBoy
 
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
         {
+            gpu.Shutdown();
             gpu.Terminate();
             cpu.Terminate();
         }
