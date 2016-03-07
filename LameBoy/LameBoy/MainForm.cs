@@ -67,5 +67,42 @@ namespace LameBoy
             //Set palette gray
             Palette.SetColors(new byte[] { 255, 255, 255 }, new byte[] { 192, 192, 192 }, new byte[] { 127, 127, 127 }, new byte[] { 0, 0, 0 });
         }
+
+        private void menuItem15_Click(object sender, EventArgs e)
+        {
+            //Random Palette
+            Random r = new Random();
+            Palette.SetColors(new byte[] { (byte)r.Next(256), (byte)r.Next(256), (byte)r.Next(256) }, new byte[] { (byte)r.Next(256), (byte)r.Next(256), (byte)r.Next(256) }, new byte[] { (byte)r.Next(256), (byte)r.Next(256), (byte)r.Next(256) }, new byte[] { (byte)r.Next(256), (byte)r.Next(256), (byte)r.Next(256) });
+        }
+
+        private void menuItem10_Click(object sender, EventArgs e)
+        {
+            //scale 1
+            cpu.SetScale(1);
+        }
+
+        private void menuItem11_Click(object sender, EventArgs e)
+        {
+            //scale 2
+            cpu.SetScale(2);
+        }
+
+        private void menuItem12_Click(object sender, EventArgs e)
+        {
+            //scale 3
+            cpu.SetScale(3);
+        }
+
+        private void menuItem13_Click(object sender, EventArgs e)
+        {
+            //scale 4
+            cpu.SetScale(4);
+        }
+
+        private void menuItem14_Click(object sender, EventArgs e)
+        {
+            //scale 5
+            cpu.SetScale(5);
+        }
     }
 }

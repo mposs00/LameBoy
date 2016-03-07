@@ -22,6 +22,12 @@ namespace LameBoy.Graphics
             sdlThread.Start();
             frame = new byte[160,144];
             tiles = new List<byte[,]>();
+            Palette.SetColors(new byte[] { 0xE0, 0xF8, 0xD0 }, new byte[] { 0x88, 0xC0, 0x70 }, new byte[] { 0x34, 0x68, 0x56 }, new byte[] { 0x08, 0x18, 0x20 });
+        }
+
+        public void SetScale(int scale)
+        {
+            sdlt.rt.scale = scale;
         }
 
         public void SetCPUExecutionState(bool state)

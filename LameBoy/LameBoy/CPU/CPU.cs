@@ -29,6 +29,11 @@ namespace LameBoy
             gpu.SetCart(cart);
         }
 
+        public void SetScale(int scale)
+        {
+            gpu.SetScale(scale);
+        }
+
         //Main interpreter loop
         public void exec()
         {

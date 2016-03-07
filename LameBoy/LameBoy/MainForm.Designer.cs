@@ -43,6 +43,13 @@
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.menuItem13 = new System.Windows.Forms.MenuItem();
+            this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -107,7 +114,8 @@
             // 
             this.menuItem4.Index = 2;
             this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem5});
+            this.menuItem5,
+            this.menuItem9});
             this.menuItem4.Text = "View";
             // 
             // menuItem5
@@ -116,7 +124,8 @@
             this.menuItem5.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem6,
             this.menuItem7,
-            this.menuItem8});
+            this.menuItem8,
+            this.menuItem15});
             this.menuItem5.Text = "Palette";
             // 
             // menuItem6
@@ -136,6 +145,53 @@
             this.menuItem8.Index = 2;
             this.menuItem8.Text = "Gray";
             this.menuItem8.Click += new System.EventHandler(this.menuItem8_Click);
+            // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 1;
+            this.menuItem9.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem10,
+            this.menuItem11,
+            this.menuItem12,
+            this.menuItem13,
+            this.menuItem14});
+            this.menuItem9.Text = "Scale";
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 0;
+            this.menuItem10.Text = "1";
+            this.menuItem10.Click += new System.EventHandler(this.menuItem10_Click);
+            // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 1;
+            this.menuItem11.Text = "2";
+            this.menuItem11.Click += new System.EventHandler(this.menuItem11_Click);
+            // 
+            // menuItem12
+            // 
+            this.menuItem12.Index = 2;
+            this.menuItem12.Text = "3";
+            this.menuItem12.Click += new System.EventHandler(this.menuItem12_Click);
+            // 
+            // menuItem13
+            // 
+            this.menuItem13.Index = 3;
+            this.menuItem13.Text = "4";
+            this.menuItem13.Click += new System.EventHandler(this.menuItem13_Click);
+            // 
+            // menuItem14
+            // 
+            this.menuItem14.Index = 4;
+            this.menuItem14.Text = "5";
+            this.menuItem14.Click += new System.EventHandler(this.menuItem14_Click);
+            // 
+            // menuItem15
+            // 
+            this.menuItem15.Index = 3;
+            this.menuItem15.Text = "Random";
+            this.menuItem15.Click += new System.EventHandler(this.menuItem15_Click);
             // 
             // MainForm
             // 
@@ -169,5 +225,12 @@
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem menuItem9;
+        private System.Windows.Forms.MenuItem menuItem10;
+        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem menuItem12;
+        private System.Windows.Forms.MenuItem menuItem13;
+        private System.Windows.Forms.MenuItem menuItem14;
+        private System.Windows.Forms.MenuItem menuItem15;
     }
 }
