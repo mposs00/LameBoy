@@ -15,6 +15,8 @@ namespace LameBoy.Graphics
         List<byte[,]> tiles;
         public bool drawing = false;
         bool running;
+        byte tileChecksum = 0;
+        byte bgChecksum = 0;
 
         public GPU(IntPtr Handle, IntPtr pgHandle)
         {
@@ -93,6 +95,26 @@ namespace LameBoy.Graphics
             }
         }
 
+        private bool CheckBGSum()
+        {
+            byte check = 0;
+            for(int i = 0; i < 0x20; i++)
+            {
+                check += cart.Read8(0x9800 + i);
+            }
+            return check != bgChecksum;
+        }
+
+        private bool CheckTileSum()
+        {
+            byte check = 0;
+            for(int i = 0; i < 0xF0; i += 0x10)
+            {
+                check += cart.Read8(0x8000 + (i * 0x10));
+            }
+            return check != tileChecksum;
+        }
+
         public void RenderScene()
         {
             while (running)
@@ -131,26 +153,42 @@ namespace LameBoy.Graphics
                     //data stored in OAM
 
                     //Copy tiles
-                    for (int n = 0; n < 0xFF; n++)
+                    if (CheckTileSum())
                     {
-                        byte[] tile = new byte[16];
-                        for (int i = 0; i < 16; i++)
+                        tiles = new List<byte[,]>();
+                        tileChecksum = 0;
+                        for (int n = 0; n < 0xFF; n++)
                         {
-                            //4329 = 1
-                            //378F = square block
-                            tile[i] = cart.Read8(0x8000 + (n * 0x10) + i);
+                            byte[] tile = new byte[16];
+                            for (int i = 0; i < 16; i++)
+                            {
+                                //4329 = 1
+                                //378F = square block
+                                tile[i] = cart.Read8(0x8000 + (n * 0x10) + i);
+                            }
+                            if (n % 0x10 == 0)
+                            {
+                                tileChecksum += cart.Read8(0x8000 + (n * 0x10));
+                            }
+                            tiles.Add(DecodeTile(tile));
                         }
-                        tiles.Add(DecodeTile(tile));
                     }
 
                     //Render background
-                    for(int y = 0; y < 0x20; y++)
+                    if (CheckBGSum())
                     {
-                        for(int x = 0; x < 0x20; x++)
+                        for (int i = 0; i < 0x20; i++)
                         {
-                            byte[,] tile = tiles.ElementAt(cart.Read8(0x9800 + x + (y * 0x20)));
-                            if(x < 0x14 && y < 0x14)
-                                DrawTile(tile, x * 8, y * 8);
+                            bgChecksum += cart.Read8(0x9800 + i);
+                        }
+                        for (int y = 0; y < 0x20; y++)
+                        {
+                            for (int x = 0; x < 0x20; x++)
+                            {
+                                byte[,] tile = tiles.ElementAt(cart.Read8(0x9800 + x + (y * 0x20)));
+                                if (x < 0x14 && y < 0x14)
+                                    DrawTile(tile, x * 8, y * 8);
+                            }
                         }
                     }
                     
