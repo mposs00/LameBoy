@@ -21,7 +21,7 @@ namespace LameBoy.Graphics
         }
         public IntPtr Renderer;
         public byte[,] pixels;
-        public int scale = 3;
+        public int scale = 5;
         public bool CPUexecuting = false;
 
         public SDLRuntime(GPU gpu)
@@ -65,31 +65,27 @@ namespace LameBoy.Graphics
                     byte r, g, b;
                     if (pixels[x, y] == 0)
                     {
-                        //e0f8d0
-                        r = 0xE0;
-                        g = 0xF8;
-                        b = 0xD0;
+                        r = Palette.blankR;
+                        g = Palette.blankG;
+                        b = Palette.blankB;
                     }
                     else if (pixels[x, y] == 1)
                     {
-                        //88c070
-                        r = 0x88;
-                        g = 0xC0;
-                        b = 0x70;
+                        r = Palette.lightR;
+                        g = Palette.lightG;
+                        b = Palette.lightB;
                     }
                     else if (pixels[x, y] == 2)
                     {
-                        //346856
-                        r = 0x34;
-                        g = 0x68;
-                        b = 0x56;
+                        r = Palette.darkR;
+                        g = Palette.darkG;
+                        b = Palette.darkB;
                     }
                     else
                     {
-                        //081820
-                        r = 08;
-                        g = 18;
-                        b = 20;
+                        r = Palette.solidR;
+                        g = Palette.solidG;
+                        b = Palette.solidB;
                     }
                     var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
                     SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, r, g, b, 255));

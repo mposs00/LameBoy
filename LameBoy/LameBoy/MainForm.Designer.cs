@@ -38,13 +38,19 @@
             this.menuItemPause = new System.Windows.Forms.MenuItem();
             this.menuItemRestart = new System.Windows.Forms.MenuItem();
             this.panelGraphics = new System.Windows.Forms.Panel();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem1,
-            this.menuItem2});
+            this.menuItem2,
+            this.menuItem4});
             // 
             // menuItem1
             // 
@@ -97,6 +103,40 @@
             this.panelGraphics.Size = new System.Drawing.Size(800, 720);
             this.panelGraphics.TabIndex = 0;
             // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 2;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem5});
+            this.menuItem4.Text = "View";
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 0;
+            this.menuItem5.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem6,
+            this.menuItem7,
+            this.menuItem8});
+            this.menuItem5.Text = "Palette";
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 0;
+            this.menuItem6.Text = "BGB";
+            this.menuItem6.Click += new System.EventHandler(this.menuItem6_Click);
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 1;
+            this.menuItem7.Text = "Dark Green";
+            this.menuItem7.Click += new System.EventHandler(this.menuItem7_Click);
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 2;
+            this.menuItem8.Text = "Gray";
+            this.menuItem8.Click += new System.EventHandler(this.menuItem8_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -124,5 +164,10 @@
         private System.Windows.Forms.MenuItem menuItemPause;
         private System.Windows.Forms.MenuItem menuItemRestart;
         private System.Windows.Forms.Panel panelGraphics;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.MenuItem menuItem8;
     }
 }
