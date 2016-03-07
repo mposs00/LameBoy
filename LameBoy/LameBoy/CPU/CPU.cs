@@ -14,13 +14,13 @@ namespace LameBoy
         GPU gpu;
         byte instr;
         bool debugOut = false;
+        bool running;
 
-        public CPU(IntPtr Handle, IntPtr pgHandle)
+        public CPU(GPU gpu)
         {
-            gpu = new GPU(Handle, pgHandle);
-            Thread GPUThread = new Thread(new ThreadStart(gpu.RenderScene));
-            GPUThread.Start();
+            this.gpu = gpu;
             //Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
+            running = true;
         }
 
         public void SetCart(Cart NewCart)
@@ -35,9 +35,9 @@ namespace LameBoy
         }
 
         //Main interpreter loop
-        public void exec()
+        public void Execute()
         {
-            while (true)
+            while (running)
             {
                 gpu.SetCPUExecutionState(true);
                 instr = cart.Read8(registers.PC);
@@ -70,6 +70,11 @@ namespace LameBoy
                 opcode.Execute(ref registers, cart.RAM);
                 gpu.SetCPUExecutionState(false);
             }
+        }
+
+        public void Terminate()
+        {
+            running = false;
         }
     }
 }

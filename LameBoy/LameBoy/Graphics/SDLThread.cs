@@ -24,6 +24,7 @@ namespace LameBoy.Graphics
 
         public SDLRuntime rt;
         GPU gpu;
+        bool running;
 
         public SDLThread(IntPtr Handle, IntPtr pgHandle, GPU gpu)
         {
@@ -37,13 +38,14 @@ namespace LameBoy.Graphics
             SetWindowPos(rtHandle, Handle, 0, 0, 0, 0, 0x0401); //0x400 = SHOWWINDOW
             SetParent(rtHandle, pgHandle);
             ShowWindow(rtHandle, 1);
+            running = true;
         }
 
         public void Render()
         {
             Stopwatch time = new Stopwatch();
             int extraTime = 0;
-            while (true)
+            while (running)
             {
                 time.Start();
                 rt.Render();
@@ -54,6 +56,12 @@ namespace LameBoy.Graphics
                 time.Reset();
                 //Console.WriteLine(extraTime);
             }
+        }
+
+        public void Terminate()
+        {
+            rt.Destroy();
+            running = false;
         }
     }
 }

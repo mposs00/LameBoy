@@ -204,7 +204,8 @@
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.Text = "LameBoy";
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Load += new System.EventHandler(MainForm_Load);
+            this.FormClosing += MainForm_Closing;
             this.ResumeLayout(false);
 
         }

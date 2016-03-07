@@ -14,6 +14,7 @@ namespace LameBoy.Graphics
         byte[,] frame;
         List<byte[,]> tiles;
         public bool drawing = false;
+        bool running;
 
         public GPU(IntPtr Handle, IntPtr pgHandle)
         {
@@ -23,6 +24,7 @@ namespace LameBoy.Graphics
             frame = new byte[160,144];
             tiles = new List<byte[,]>();
             Palette.SetColors(new byte[] { 0xE0, 0xF8, 0xD0 }, new byte[] { 0x88, 0xC0, 0x70 }, new byte[] { 0x34, 0x68, 0x56 }, new byte[] { 0x08, 0x18, 0x20 });
+            running = true;
         }
 
         public void SetScale(int scale)
@@ -88,7 +90,7 @@ namespace LameBoy.Graphics
 
         public void RenderScene()
         {
-            while (true)
+            while (running)
             {
                 drawing = true;
                 if (cart == null)
@@ -173,6 +175,12 @@ namespace LameBoy.Graphics
                     drawing = false;
                 }
             }
+        }
+
+        public void Terminate()
+        {
+            sdlt.Terminate();
+            running = false;
         }
     }
 }

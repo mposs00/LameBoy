@@ -11,6 +11,9 @@ namespace LameBoy
     public partial class MainForm : Form
     {
         CPU cpu;
+        GPU gpu;
+        Thread cpuThread;
+        Thread gpuThread;
 
         public MainForm()
         {
@@ -19,7 +22,14 @@ namespace LameBoy
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            cpu = new CPU(Handle, panelGraphics.Handle);
+            gpu = new GPU(Handle, panelGraphics.Handle);
+            cpu = new CPU(gpu);
+        }
+
+        private void MainForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            gpu.Terminate();
+            cpu.Terminate();
         }
 
         private void menuItemOpenRom_Click(object sender, EventArgs e)
@@ -45,8 +55,11 @@ namespace LameBoy
                     return;
                 }
 
-                Thread cputhread = new Thread(new ThreadStart(cpu.exec));
-                cputhread.Start();
+                cpuThread = new Thread(new ThreadStart(cpu.Execute));
+                cpuThread.Start();
+
+                gpuThread = new Thread(new ThreadStart(gpu.RenderScene));
+                gpuThread.Start();
             }
         }
 
