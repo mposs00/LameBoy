@@ -54,7 +54,7 @@ namespace LameBoy.Graphics
                 if (extraTime > 0)
                     Thread.Sleep(extraTime);
                 time.Reset();
-                Console.WriteLine(extraTime);
+                //Console.WriteLine(extraTime);
             }
         }
 
