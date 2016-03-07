@@ -24,6 +24,9 @@ namespace LameBoy
         {
             gpu = new GPU(Handle, panelGraphics.Handle);
             cpu = new CPU(gpu);
+            gpuThread = new Thread(new ThreadStart(gpu.RenderScene));
+            gpuThread.Start();
+
         }
 
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
