@@ -83,14 +83,14 @@ namespace LameBoy.Graphics
 
         private void DrawTile(byte[,] tile, int xCoord, int yCoord)
         {
-            for (int y = 0; y < 144; y++)
+            if (xCoord >= 160 || yCoord >= 144)
+                return;
+
+            for (int y = 0; y < 8; y++)
             {
-                for (int x = 0; x < 160; x++)
+                for (int x = 0; x < 8; x++)
                 {
-                    if ((y > yCoord - 1 && y < yCoord + 8) && (x > xCoord - 1 && x < xCoord + 8))
-                    {
-                        frame[x, y] = tile[y - yCoord, x - xCoord];
-                    }
+                    frame[x + xCoord, y + yCoord] = tile[y, x];
                 }
             }
         }
