@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace LameBoy
 {
-    class CPU
+    public class CPU
     {
         Registers registers = new Registers { PC = 0x100 };
 
@@ -32,6 +32,14 @@ namespace LameBoy
         public void SetScale(int scale)
         {
             gpu.SetScale(scale);
+        }
+
+        public void VblankInterrupt()
+        {
+            gpu.SetCPUExecutionState(true);
+            registers.Immediate16 = 0x0040;
+            var opcode = OpcodeTable.Table[0xCD];
+            opcode.Execute(ref registers, cart.RAM);
         }
 
         //Main interpreter loop
