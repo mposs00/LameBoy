@@ -29,6 +29,211 @@
         {
             return false; //TODO
         }
+
+        public static bool[] ByteToBits(byte start)
+        {
+            bool[] bits = new bool[8];
+            for(int i = 0; i < 8; i++)
+            {
+                int mask = 1 << i;
+                bits[i] = (start & mask) == mask;
+            }
+            return bits;
+        }
+
+        public static byte BitsToByte(bool[] bits)
+        {
+            byte result = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                if (bits[i])
+                {
+                    result |= (byte) (1 << i);
+                }
+            }
+            return result;
+        }
+
+        private static void DecodeCB(byte opcode, ref Registers regs)
+        {
+            int instrType = (opcode & 0xC0) >> 6;
+            int argument = (opcode & 0x38) >> 3;
+            int register = (opcode & 0x7);
+
+            bool[] bits = new bool[0];
+
+            if(instrType == 0)
+            {
+                //Rotate/Shift
+            }
+            else if(instrType == 1)
+            {
+                //Test bit
+                if (register == 0)
+                {
+                    //B
+                    bits = ByteToBits(regs.B);
+                    regs.Z = !bits[argument];
+                }
+                if (register == 1)
+                {
+                    //C
+                    bits = ByteToBits(regs.C);
+                }
+                if (register == 2)
+                {
+                    //D
+                    bits = ByteToBits(regs.D);
+                }
+                if (register == 3)
+                {
+                    //E
+                    bits = ByteToBits(regs.E);
+                }
+                if (register == 4)
+                {
+                    //H
+                    bits = ByteToBits(regs.H);
+                }
+                if (register == 5)
+                {
+                    //L
+                    bits = ByteToBits(regs.L);
+                }
+                if (register == 6)
+                {
+                    //HL
+                    bits = ByteToBits(regs.B);
+                }
+                if (register == 7)
+                {
+                    //A
+                    bits = ByteToBits(regs.A);
+                }
+                regs.Z = !bits[argument];
+            }
+            else if(instrType == 2)
+            {
+                //Reset bit
+                if(register == 0)
+                {
+                    //B
+                    bits = ByteToBits(regs.B);
+                    bits[argument] = false;
+                    regs.B = BitsToByte(bits);
+                }
+                if (register == 1)
+                {
+                    //C
+                    bits = ByteToBits(regs.C);
+                    bits[argument] = false;
+                    regs.C = BitsToByte(bits);
+                }
+                if (register == 2)
+                {
+                    //D
+                    bits = ByteToBits(regs.D);
+                    bits[argument] = false;
+                    regs.D = BitsToByte(bits);
+                }
+                if (register == 3)
+                {
+                    //E
+                    bits = ByteToBits(regs.E);
+                    bits[argument] = false;
+                    regs.E = BitsToByte(bits);
+                }
+                if (register == 4)
+                {
+                    //H
+                    bits = ByteToBits(regs.H);
+                    bits[argument] = false;
+                    regs.H = BitsToByte(bits);
+                }
+                if (register == 5)
+                {
+                    //L
+                    bits = ByteToBits(regs.L);
+                    bits[argument] = false;
+                    regs.L = BitsToByte(bits);
+                }
+                if (register == 6)
+                {
+                    //HL
+                    bits = ByteToBits(regs.B);
+                    bits[argument] = false;
+                    regs.B = BitsToByte(bits);
+                }
+                if (register == 7)
+                {
+                    //A
+                    bits = ByteToBits(regs.A);
+                    bits[argument] = false;
+                    regs.A = BitsToByte(bits);
+                }
+            }
+            else if(instrType == 3)
+            {
+                //Set bit
+                if (register == 0)
+                {
+                    //B
+                    bits = ByteToBits(regs.B);
+                    bits[argument] = true;
+                    regs.B = BitsToByte(bits);
+                }
+                if (register == 1)
+                {
+                    //C
+                    bits = ByteToBits(regs.C);
+                    bits[argument] = true;
+                    regs.C = BitsToByte(bits);
+                }
+                if (register == 2)
+                {
+                    //D
+                    bits = ByteToBits(regs.D);
+                    bits[argument] = true;
+                    regs.D = BitsToByte(bits);
+                }
+                if (register == 3)
+                {
+                    //E
+                    bits = ByteToBits(regs.E);
+                    bits[argument] = true;
+                    regs.E = BitsToByte(bits);
+                }
+                if (register == 4)
+                {
+                    //H
+                    bits = ByteToBits(regs.H);
+                    bits[argument] = true;
+                    regs.H = BitsToByte(bits);
+                }
+                if (register == 5)
+                {
+                    //L
+                    bits = ByteToBits(regs.L);
+                    bits[argument] = true;
+                    regs.L = BitsToByte(bits);
+                }
+                if (register == 6)
+                {
+                    //HL
+                    bits = ByteToBits(regs.B);
+                    bits[argument] = true;
+                    regs.B = BitsToByte(bits);
+                }
+                if (register == 7)
+                {
+                    //A
+                    bits = ByteToBits(regs.A);
+                    bits[argument] = true;
+                    regs.A = BitsToByte(bits);
+                }
+            }
+        }
+
         //DO NOT INCREMENT PC HERE! DO NOT INCREMENT PC HERE!
         public static readonly Opcode[] Table =
         {
@@ -235,7 +440,7 @@
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("CB Prefix",           0, 1,    (ref Registers regs, Memory mem) => { DecodeCB(regs.Immediate8, ref regs); }),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),

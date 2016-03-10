@@ -28,6 +28,9 @@ namespace LameBoy
             */
             //while (true) rt.Render();
             //Console.ReadLine();
+            bool[] bits = OpcodeTable.ByteToBits(0xAB);
+            Console.WriteLine(OpcodeTable.BitsToByte(bits).ToString("X2"));
+            Console.ReadLine();
             Application.EnableVisualStyles();
             Application.Run(new MainForm());
         }
