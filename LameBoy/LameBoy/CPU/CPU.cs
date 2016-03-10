@@ -40,6 +40,7 @@ namespace LameBoy
             registers.Immediate16 = 0x0040;
             var opcode = OpcodeTable.Table[0xCD];
             opcode.Execute(ref registers, cart.RAM);
+            gpu.SetCPUExecutionState(false);
         }
 
         //Main interpreter loop
@@ -77,6 +78,10 @@ namespace LameBoy
                 registers.PC++;
                 opcode.Execute(ref registers, cart.RAM);
                 gpu.SetCPUExecutionState(false);
+                if (gpu.GetYCounter() == 154)
+                {
+                    VblankInterrupt();
+                }
             }
         }
 

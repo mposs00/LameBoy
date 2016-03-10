@@ -34,6 +34,15 @@ namespace LameBoy.Graphics
             sdlt.Terminate();
         }
 
+        public byte GetYCounter()
+        {
+            if(cart != null)
+            {
+                return cart.Read8(0xFF44);
+            }
+            return 0;
+        }
+
         public void SetScale(int scale)
         {
             sdlt.rt.scale = scale;
