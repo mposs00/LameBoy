@@ -53,7 +53,7 @@ namespace LameBoy
                         disasm = String.Format(disasm, registers.Immediate8);
                     Console.WriteLine("PC: ${0:X4} Disasm: {1} Opcode: {2:X2}", registers.PC, disasm, instr);
                 }
-                if (opcode.Disassembly == "UNIMP")
+                if (opcode.Disassembly.Contains("UNIMP"))
                 {
                     //debugOut = true;
                     Console.WriteLine("Unimplemented opcode: {0:X2}", instr);
