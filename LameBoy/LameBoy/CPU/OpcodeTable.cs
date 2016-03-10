@@ -30,7 +30,20 @@
             return false; //TODO
         }
 
-        public static bool[] ByteToBits(byte start)
+        private static void Push(ushort data, ref Memory mem, ref Registers regs)
+        {
+            mem.Write16(regs.SP, data);
+            regs.SP -= 2;
+        }
+
+        private static ushort Pop(ref Memory mem, ref Registers regs)
+        {
+            ushort data = mem.Read8(regs.SP);
+            regs.SP += 2;
+            return data;
+        }
+
+        private static bool[] ByteToBits(byte start)
         {
             bool[] bits = new bool[8];
             for(int i = 0; i < 8; i++)
@@ -41,7 +54,7 @@
             return bits;
         }
 
-        public static byte BitsToByte(bool[] bits)
+        private static byte BitsToByte(bool[] bits)
         {
             byte result = 0;
             for (int i = 0; i < 8; i++)
@@ -54,7 +67,7 @@
             return result;
         }
 
-        private static void DecodeCB(byte opcode, ref Registers regs)
+        private static void DecodeCB(byte opcode, ref Registers regs, ref Memory mem)
         {
             int instrType = (opcode & 0xC0) >> 6;
             int argument = (opcode & 0x38) >> 3;
@@ -73,7 +86,6 @@
                 {
                     //B
                     bits = ByteToBits(regs.B);
-                    regs.Z = !bits[argument];
                 }
                 if (register == 1)
                 {
@@ -103,7 +115,7 @@
                 if (register == 6)
                 {
                     //HL
-                    bits = ByteToBits(regs.B);
+                    bits = ByteToBits(mem.Read8(regs.HL));
                 }
                 if (register == 7)
                 {
@@ -160,7 +172,7 @@
                 if (register == 6)
                 {
                     //HL
-                    bits = ByteToBits(regs.B);
+                    bits = ByteToBits(mem.Read8(regs.HL));
                     bits[argument] = false;
                     regs.B = BitsToByte(bits);
                 }
@@ -220,7 +232,7 @@
                 if (register == 6)
                 {
                     //HL
-                    bits = ByteToBits(regs.B);
+                    bits = ByteToBits(mem.Read8(regs.HL));
                     bits[argument] = true;
                     regs.B = BitsToByte(bits);
                 }
@@ -440,7 +452,7 @@
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("CB Prefix",           0, 1,    (ref Registers regs, Memory mem) => { DecodeCB(regs.Immediate8, ref regs); }),
+            new Opcode("CB Prefix",       0, 1,    (ref Registers regs, Memory mem) => { DecodeCB(regs.Immediate8, ref regs); }),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
