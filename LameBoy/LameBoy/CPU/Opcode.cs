@@ -8,7 +8,7 @@
         public readonly Exec Execute;
         public readonly byte T, M;
 
-        public Opcode(string disasm, byte operands, byte m, byte t, Exec exe)
+        public Opcode(string disasm, byte operands, byte t, byte m, Exec exe)
         {
             Disassembly = disasm;
             Length = operands;
@@ -17,8 +17,8 @@
             M = m;
         }
 
-        public Opcode(string disasm, byte operands, byte m, Exec exe) :
-            this(disasm, operands, m, (byte)(m * 4), exe)
+        public Opcode(string disasm, byte operands, byte t, Exec exe) :
+            this(disasm, operands, t, (byte)(t / 4), exe)
         { }
     }
 }
