@@ -194,7 +194,12 @@ namespace LameBoy.Graphics
                         {
                             for (int x = 0; x < 0x20; x++)
                             {
-                                byte[,] tile = tiles.ElementAt(cart.Read8(0x9800 + x + (y * 0x20)));
+                                int val = (int) cart.Read8(0x9800 + x + (y * 0x20));
+                                if (val > tiles.Capacity)
+                                    continue;
+                                if (val == 0)
+                                    continue;
+                                byte[,] tile = tiles.ElementAt(val);
                                 if (x < 0x14 && y < 0x14)
                                     DrawTile(tile, x * 8, y * 8);
                             }
@@ -218,6 +223,10 @@ namespace LameBoy.Graphics
                         byte OAMX = OAM[i, 1];
                         byte OAMTile = OAM[i, 2];
                         byte OAMFlags = OAM[i, 3];
+                        if (OAMX == 0 || OAMY == 0)
+                            continue;
+                        if (OAMX > 8 || OAMY > 16)
+                            continue;
                         if((OAMFlags & 0x80) == 0x80)
                         {
                             DrawTile(tiles.ElementAt(OAMTile), OAMX - 8, OAMY - 16);

@@ -386,7 +386,7 @@
             new Opcode("UNIMP ADD A, (HL)",     0, 8,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP ADD A, A",        0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP ADC A, B",        0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP ADC A, C",        0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("ADC A, C",        0, 4,    (ref Registers regs, Memory mem) => { regs.A += regs.C; }),
             new Opcode("UNIMP ADC A, D",        0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP ADC A, E",        0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP ADC A, H",        0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
