@@ -50,7 +50,7 @@ namespace LameBoy.Graphics
 
         public void Render()
         {
-            while(CPUexecuting){ }
+            //while(CPUexecuting){ }
             while (gpu.drawing) { }
 
             SDL_Surface surf = (SDL_Surface)Marshal.PtrToStructure(Surface, typeof(SDL_Surface));
