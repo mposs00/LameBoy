@@ -75,174 +75,134 @@
 
             bool[] bits = new bool[0];
 
-            if(instrType == 0)
+            switch (instrType)
             {
-                //Rotate/Shift
-            }
-            else if(instrType == 1)
-            {
-                //Test bit
-                if (register == 0)
-                {
-                    //B
-                    bits = ByteToBits(regs.B);
-                }
-                if (register == 1)
-                {
-                    //C
-                    bits = ByteToBits(regs.C);
-                }
-                if (register == 2)
-                {
-                    //D
-                    bits = ByteToBits(regs.D);
-                }
-                if (register == 3)
-                {
-                    //E
-                    bits = ByteToBits(regs.E);
-                }
-                if (register == 4)
-                {
-                    //H
-                    bits = ByteToBits(regs.H);
-                }
-                if (register == 5)
-                {
-                    //L
-                    bits = ByteToBits(regs.L);
-                }
-                if (register == 6)
-                {
-                    //HL
-                    bits = ByteToBits(mem.Read8(regs.HL));
-                }
-                if (register == 7)
-                {
-                    //A
-                    bits = ByteToBits(regs.A);
-                }
-                regs.Z = !bits[argument];
-            }
-            else if(instrType == 2)
-            {
-                //Reset bit
-                if(register == 0)
-                {
-                    //B
-                    bits = ByteToBits(regs.B);
-                    bits[argument] = false;
-                    regs.B = BitsToByte(bits);
-                }
-                if (register == 1)
-                {
-                    //C
-                    bits = ByteToBits(regs.C);
-                    bits[argument] = false;
-                    regs.C = BitsToByte(bits);
-                }
-                if (register == 2)
-                {
-                    //D
-                    bits = ByteToBits(regs.D);
-                    bits[argument] = false;
-                    regs.D = BitsToByte(bits);
-                }
-                if (register == 3)
-                {
-                    //E
-                    bits = ByteToBits(regs.E);
-                    bits[argument] = false;
-                    regs.E = BitsToByte(bits);
-                }
-                if (register == 4)
-                {
-                    //H
-                    bits = ByteToBits(regs.H);
-                    bits[argument] = false;
-                    regs.H = BitsToByte(bits);
-                }
-                if (register == 5)
-                {
-                    //L
-                    bits = ByteToBits(regs.L);
-                    bits[argument] = false;
-                    regs.L = BitsToByte(bits);
-                }
-                if (register == 6)
-                {
-                    //HL
-                    bits = ByteToBits(mem.Read8(regs.HL));
-                    bits[argument] = false;
-                    regs.B = BitsToByte(bits);
-                }
-                if (register == 7)
-                {
-                    //A
-                    bits = ByteToBits(regs.A);
-                    bits[argument] = false;
-                    regs.A = BitsToByte(bits);
-                }
-            }
-            else if(instrType == 3)
-            {
-                //Set bit
-                if (register == 0)
-                {
-                    //B
-                    bits = ByteToBits(regs.B);
-                    bits[argument] = true;
-                    regs.B = BitsToByte(bits);
-                }
-                if (register == 1)
-                {
-                    //C
-                    bits = ByteToBits(regs.C);
-                    bits[argument] = true;
-                    regs.C = BitsToByte(bits);
-                }
-                if (register == 2)
-                {
-                    //D
-                    bits = ByteToBits(regs.D);
-                    bits[argument] = true;
-                    regs.D = BitsToByte(bits);
-                }
-                if (register == 3)
-                {
-                    //E
-                    bits = ByteToBits(regs.E);
-                    bits[argument] = true;
-                    regs.E = BitsToByte(bits);
-                }
-                if (register == 4)
-                {
-                    //H
-                    bits = ByteToBits(regs.H);
-                    bits[argument] = true;
-                    regs.H = BitsToByte(bits);
-                }
-                if (register == 5)
-                {
-                    //L
-                    bits = ByteToBits(regs.L);
-                    bits[argument] = true;
-                    regs.L = BitsToByte(bits);
-                }
-                if (register == 6)
-                {
-                    //HL
-                    bits = ByteToBits(mem.Read8(regs.HL));
-                    bits[argument] = true;
-                    regs.B = BitsToByte(bits);
-                }
-                if (register == 7)
-                {
-                    //A
-                    bits = ByteToBits(regs.A);
-                    bits[argument] = true;
-                    regs.A = BitsToByte(bits);
-                }
+                case 0:
+                    //Rotate/Shift
+                    break;
+                case 1:
+                    //Test bit
+                    switch (register)
+                    {
+                        case 0: bits = ByteToBits(regs.B); break;
+                        case 1: bits = ByteToBits(regs.C); break;
+                        case 2: bits = ByteToBits(regs.D); break;
+                        case 3: bits = ByteToBits(regs.E); break;
+                        case 4: bits = ByteToBits(regs.H); break;
+                        case 5: bits = ByteToBits(regs.L); break;
+                        case 6: bits = ByteToBits(mem.Read8(regs.HL)); break;
+                        case 7: bits = ByteToBits(regs.A); break;
+                    }
+                    regs.Z = !bits[argument];
+                    break;
+                case 2:
+                    //Reset bit
+                    switch (register)
+                    {
+                        case 0:
+                            //B
+                            bits = ByteToBits(regs.B);
+                            bits[argument] = false;
+                            regs.B = BitsToByte(bits);
+                            break;
+                        case 1:
+                            //C
+                            bits = ByteToBits(regs.C);
+                            bits[argument] = false;
+                            regs.C = BitsToByte(bits);
+                            break;
+                        case 2:
+                            //D
+                            bits = ByteToBits(regs.D);
+                            bits[argument] = false;
+                            regs.D = BitsToByte(bits);
+                            break;
+                        case 3:
+                            //E
+                            bits = ByteToBits(regs.E);
+                            bits[argument] = false;
+                            regs.E = BitsToByte(bits);
+                            break;
+                        case 4:
+                            //H
+                            bits = ByteToBits(regs.H);
+                            bits[argument] = false;
+                            regs.H = BitsToByte(bits);
+                            break;
+                        case 5:
+                            //L
+                            bits = ByteToBits(regs.L);
+                            bits[argument] = false;
+                            regs.L = BitsToByte(bits);
+                            break;
+                        case 6:
+                            //HL
+                            bits = ByteToBits(mem.Read8(regs.HL));
+                            bits[argument] = false;
+                            regs.B = BitsToByte(bits);
+                            break;
+                        case 7:
+                            //A
+                            bits = ByteToBits(regs.A);
+                            bits[argument] = false;
+                            regs.A = BitsToByte(bits);
+                            break;
+                    }
+                    break;
+                case 3:
+                    //Set bit
+                    switch (register)
+                    {
+                        case 0:
+                            //B
+                            bits = ByteToBits(regs.B);
+                            bits[argument] = true;
+                            regs.B = BitsToByte(bits);
+                            break;
+                        case 1:
+                            //C
+                            bits = ByteToBits(regs.C);
+                            bits[argument] = true;
+                            regs.C = BitsToByte(bits);
+                            break;
+                        case 2:
+                            //D
+                            bits = ByteToBits(regs.D);
+                            bits[argument] = true;
+                            regs.D = BitsToByte(bits);
+                            break;
+                        case 3:
+                            //E
+                            bits = ByteToBits(regs.E);
+                            bits[argument] = true;
+                            regs.E = BitsToByte(bits);
+                            break;
+                        case 4:
+                            //H
+                            bits = ByteToBits(regs.H);
+                            bits[argument] = true;
+                            regs.H = BitsToByte(bits);
+                            break;
+                        case 5:
+                            //L
+                            bits = ByteToBits(regs.L);
+                            bits[argument] = true;
+                            regs.L = BitsToByte(bits);
+                            break;
+                        case 6:
+                            //HL
+                            bits = ByteToBits(mem.Read8(regs.HL));
+                            bits[argument] = true;
+                            regs.B = BitsToByte(bits);
+                            break;
+                        case 7:
+                            //A
+                            bits = ByteToBits(regs.A);
+                            bits[argument] = true;
+                            regs.A = BitsToByte(bits);
+                            break;
+                    }
+                    break;
             }
         }
 
