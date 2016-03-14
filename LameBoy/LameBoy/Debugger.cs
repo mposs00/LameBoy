@@ -86,22 +86,18 @@ namespace LameBoy
             if (cpu.CPUState == State.Stopped) return;
             cpu.Pause();
             cpu.Execute();
+            UpdateRegisters();
+            ShowExecLine();
         }
 
         public void ShowExecLine()
         {
             var pc = cpu.registers.PC;
-            try
-            {
-                int instrIndex = romDisassembly.IndexOf(romDisassembly.FirstOrDefault(instruction => instruction.Item1 == pc));
-                listViewDisassemblyROM.SelectedIndices.Clear();
-                listViewDisassemblyROM.SelectedIndices.Add(instrIndex);
-                listViewDisassemblyROM.EnsureVisible(instrIndex);
-            }
-            catch
-            {
-                //Nothing happens, probably because our CPU is broken. Let's just keep the cursor where it is.
-            }
+            int instrIndex = romDisassembly.IndexOf(romDisassembly.FirstOrDefault(instruction => instruction.Item1 == pc));
+            if (instrIndex < 0) return;
+            listViewDisassemblyROM.SelectedIndices.Clear();
+            listViewDisassemblyROM.SelectedIndices.Add(instrIndex);
+            listViewDisassemblyROM.EnsureVisible(instrIndex);
         }
 
         public void PopulateDisassembly()

@@ -59,7 +59,7 @@ namespace LameBoy
 
         public void ThreadStart()
         {
-            CPUState = State.Running;
+            CPUState = State.Paused;
             ThreadLoop();
         }
 
@@ -75,7 +75,10 @@ namespace LameBoy
                 }
 
                 if (CPUState != State.Running)
+                {
+                    Thread.Sleep(50);
                     continue;
+                }
 
                 Execute();
             }
@@ -145,7 +148,6 @@ namespace LameBoy
             }
 
             registers.PC += opcode.Length;
-            registers.PC++;
             opcode.Execute(ref registers, GameCart.RAM);
             gpu.SetCPUExecutionState(false);
             if (gpu.GetYCounter() == 154 && registers.Interrupts)

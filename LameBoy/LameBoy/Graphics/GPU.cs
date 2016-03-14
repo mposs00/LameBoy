@@ -92,7 +92,7 @@ namespace LameBoy.Graphics
 
         private void DrawTile(byte[,] tile, int xCoord, int yCoord)
         {
-            if (xCoord >= 160 || yCoord >= 144)
+            if (xCoord > 159 || yCoord > 143)
                 return;
 
             for (int y = 0; y < 8; y++)

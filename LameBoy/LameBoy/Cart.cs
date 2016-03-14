@@ -42,17 +42,18 @@ namespace LameBoy
         string romName;
         Memory ROM;
         public Memory RAM { get; private set; }
+        public CartType Type { get; private set; }
 
         public Cart(string romName)
         {
             this.romName = romName;
             RAM = new Memory(0xFFFF + 1);
 
-            if (File.Exists(romName))
-                ROM = new Memory(File.ReadAllBytes(romName));
-            else
+            if (!File.Exists(romName))
                 throw new FileNotFoundException("Couldn't open up a Game Boy ROM.", romName);
 
+            ROM = new Memory(File.ReadAllBytes(romName));
+            Type = GetCartType();
             ROM.CopyInto(RAM);
         }
 
@@ -67,7 +68,7 @@ namespace LameBoy
 
         public byte Read8(int addr)
         {
-            if (GetCartType() == CartType.ROM)
+            if (Type == CartType.ROM)
             {
                 return RAM[addr];
             }
@@ -81,7 +82,7 @@ namespace LameBoy
 
         public void Write8(int addr, byte data)
         {
-            if (GetCartType() == CartType.ROM)
+            if (Type == CartType.ROM)
             {
                 RAM[addr] = data;
             }
@@ -89,7 +90,7 @@ namespace LameBoy
 
         public void Write16(int addr, ushort data)
         {
-            if (GetCartType() == CartType.ROM)
+            if (Type == CartType.ROM)
             {
                 RAM.Write16(addr, data);
             }
