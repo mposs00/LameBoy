@@ -52,6 +52,19 @@
     <Compile Include="CPU\Opcode.cs" />
     <Compile Include="CPU\OpcodeTable.cs" />
     <Compile Include="CPU\Registers.cs" />
+    <Compile Include="CPU\State.cs" />
+    <Compile Include="Debugger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Debugger.Designer.cs">
+      <DependentUpon>Debugger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GoToAddressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GoToAddressDialog.Designer.cs">
+      <DependentUpon>GoToAddressDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\GPU.cs" />
     <Compile Include="Graphics\Palette.cs" />
     <Compile Include="Graphics\SDLException.cs" />
@@ -65,6 +78,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -76,12 +94,33 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Debugger.resx">
+      <DependentUpon>Debugger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GoToAddressDialog.resx">
+      <DependentUpon>GoToAddressDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\DebuggerGo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DebbugerStop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DebuggerStep.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DebuggerPause.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

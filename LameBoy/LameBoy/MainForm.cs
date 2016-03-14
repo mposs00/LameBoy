@@ -15,6 +15,8 @@ namespace LameBoy
         Thread cpuThread;
         Thread gpuThread;
 
+        Debugger debuggerForm;
+
         public MainForm()
         {
             InitializeComponent();
@@ -24,6 +26,7 @@ namespace LameBoy
         {
             gpu = new GPU(Handle, panelGraphics.Handle);
             cpu = new CPU(gpu);
+            debuggerForm = new Debugger(cpu);
             gpuThread = new Thread(new ThreadStart(gpu.RenderScene));
             gpuThread.Start();
 
@@ -57,11 +60,13 @@ namespace LameBoy
                     //Doesn't execute CPU when loading a ramdump
                     return;
 
-                cpuThread = new Thread(new ThreadStart(cpu.Execute));
+                cpuThread = new Thread(new ThreadStart(cpu.ThreadStart));
                 cpuThread.Start();
 
                 gpuThread = new Thread(new ThreadStart(gpu.RenderScene));
                 gpuThread.Start();
+
+                debuggerForm.Initialize();
             }
         }
 
@@ -118,6 +123,14 @@ namespace LameBoy
         {
             //scale 5
             cpu.SetScale(5);
+        }
+
+        private void menuItem17_Click(object sender, EventArgs e)
+        {
+            if (debuggerForm.Visible)
+                debuggerForm.Activate();
+            else
+                debuggerForm.Show(this);
         }
     }
 }

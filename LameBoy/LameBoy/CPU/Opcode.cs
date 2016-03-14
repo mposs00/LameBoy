@@ -11,7 +11,7 @@
         public Opcode(string disasm, byte operands, byte t, byte m, Exec exe)
         {
             Disassembly = disasm;
-            Length = operands;
+            Length = (byte)(operands + 1);
             Execute = exe;
             T = t;
             M = m;
