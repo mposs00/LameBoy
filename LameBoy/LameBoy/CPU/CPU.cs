@@ -13,7 +13,7 @@ namespace LameBoy
 
         GPU gpu;
         byte instr;
-        bool debugOut = true;
+        bool debugOut = false;
 
         private State _cpustate;
         public State CPUState {

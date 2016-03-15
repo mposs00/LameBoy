@@ -82,17 +82,17 @@
             this.checkBoxC = new System.Windows.Forms.CheckBox();
             this.groupBoxRegisters = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDownAF = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAF = new NumericUpDownHex();
             this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownBC = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBC = new NumericUpDownHex();
             this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDownDE = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDE = new NumericUpDownHex();
             this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownHL = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownHL = new NumericUpDownHex();
             this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownSP = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSP = new NumericUpDownHex();
             this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDownPC = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPC = new NumericUpDownHex();
             this.contextMenuStripDisasm = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.goToAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
@@ -496,7 +496,7 @@
             this.groupBoxFlags.Controls.Add(this.flowLayoutPanelFlags);
             this.groupBoxFlags.Location = new System.Drawing.Point(4, 145);
             this.groupBoxFlags.Name = "groupBoxFlags";
-            this.groupBoxFlags.Size = new System.Drawing.Size(204, 57);
+            this.groupBoxFlags.Size = new System.Drawing.Size(206, 57);
             this.groupBoxFlags.TabIndex = 1;
             this.groupBoxFlags.TabStop = false;
             this.groupBoxFlags.Text = "Flags";
@@ -510,7 +510,7 @@
             this.flowLayoutPanelFlags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelFlags.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelFlags.Name = "flowLayoutPanelFlags";
-            this.flowLayoutPanelFlags.Size = new System.Drawing.Size(198, 38);
+            this.flowLayoutPanelFlags.Size = new System.Drawing.Size(200, 38);
             this.flowLayoutPanelFlags.TabIndex = 0;
             // 
             // checkBoxZ
@@ -579,7 +579,7 @@
             this.groupBoxRegisters.Controls.Add(this.numericUpDownPC);
             this.groupBoxRegisters.Location = new System.Drawing.Point(4, 3);
             this.groupBoxRegisters.Name = "groupBoxRegisters";
-            this.groupBoxRegisters.Size = new System.Drawing.Size(204, 136);
+            this.groupBoxRegisters.Size = new System.Drawing.Size(206, 136);
             this.groupBoxRegisters.TabIndex = 0;
             this.groupBoxRegisters.TabStop = false;
             this.groupBoxRegisters.Text = "Registers";
