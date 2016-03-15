@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using SDL2;
 
 namespace LameBoy.Graphics
@@ -48,7 +49,7 @@ namespace LameBoy.Graphics
             sdlt.rt.scale = scale;
         }
 
-        public void SetCPUExecutionState(bool state)
+        public void SetCPUExecutionState(State state)
         {
             sdlt.rt.CPUexecuting = state;
         }
@@ -234,6 +235,12 @@ namespace LameBoy.Graphics
                     }
                     PushFrame();
                     drawing = false;
+                    for (byte y = 0; y < 155; y++)
+                    {
+                        //Fix this somehow
+                        while (sdlt.rt.CPUexecuting != State.Running) { };
+                        UpdateYCounter(y);
+                    }
                 }
             }
         }

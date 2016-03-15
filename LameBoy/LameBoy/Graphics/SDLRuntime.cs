@@ -22,7 +22,7 @@ namespace LameBoy.Graphics
         public IntPtr Renderer;
         public byte[,] pixels;
         public int scale = 5;
-        public bool CPUexecuting = false;
+        public State CPUexecuting = State.Running;
 
         public SDLRuntime(GPU gpu)
         {
@@ -90,12 +90,6 @@ namespace LameBoy.Graphics
                     var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
                     SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, r, g, b, 255));
                 }
-                gpu.UpdateYCounter((byte) y);
-            }
-            //VBlank Lines
-            for(byte y = 143; y < 155; y++)
-            {
-                gpu.UpdateYCounter(y);
             }
             SDL_UpdateWindowSurface(Window);
         }

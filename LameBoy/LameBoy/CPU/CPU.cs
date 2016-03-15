@@ -50,11 +50,11 @@ namespace LameBoy
 
         public void VblankInterrupt()
         {
-            gpu.SetCPUExecutionState(true);
+            //gpu.SetCPUExecutionState(true);
             registers.Immediate16 = 0x0040;
             var opcode = OpcodeTable.Table[0xCD];
             opcode.Execute(ref registers, GameCart.RAM);
-            gpu.SetCPUExecutionState(false);
+            //gpu.SetCPUExecutionState(false);
         }
 
         public void ThreadStart()
@@ -84,21 +84,25 @@ namespace LameBoy
             }
 
             CPUState = State.Stopped;
+            gpu.SetCPUExecutionState(CPUState);
         }
 
         public void Terminate()
         {
             CPUState |= State.Stopping;
+            gpu.SetCPUExecutionState(CPUState);
         }
 
         public void Pause()
         {
             CPUState = State.Paused;
+            gpu.SetCPUExecutionState(CPUState);
         }
 
         public void Resume()
         {
             CPUState = State.Running;
+            gpu.SetCPUExecutionState(CPUState);
         }
 
         //Main interpreter loop
@@ -108,7 +112,7 @@ namespace LameBoy
 
             while (gpu.drawing) { }
 
-            gpu.SetCPUExecutionState(true);
+            gpu.SetCPUExecutionState(State.Running);
             instr = GameCart.Read8(registers.PC);
             var opcode = OpcodeTable.Table[instr];
             registers.Immediate8 = GameCart.Read8(registers.PC + 1);
@@ -149,11 +153,13 @@ namespace LameBoy
 
             registers.PC += opcode.Length;
             opcode.Execute(ref registers, GameCart.RAM);
-            gpu.SetCPUExecutionState(false);
+            //gpu.SetCPUExecutionState(false);
             if (gpu.GetYCounter() == 154 && registers.Interrupts)
             {
                 VblankInterrupt();
             }
+            if (CPUState == State.Paused)
+                gpu.SetCPUExecutionState(State.Paused);
         }
     }
 }
