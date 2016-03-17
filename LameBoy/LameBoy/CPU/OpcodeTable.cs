@@ -261,7 +261,7 @@
             new Opcode("LD SP, 0x{0:X4}", 2, 12,   (ref Registers regs, Memory mem) => { regs.SP = regs.Immediate16; }),
             new Opcode("LDD (HL), A",     0, 8,    (ref Registers regs, Memory mem) => { mem.Write8(regs.HL, regs.A); regs.HL--; }),
             new Opcode("INC SP",          0, 8,    (ref Registers regs, Memory mem) => { regs.SP++; }),
-            new Opcode("UNIMP INC (HL)",        0, 12,   (ref Registers regs, Memory mem) => { mem.Write8(regs.HL, (byte)(mem.Read8(regs.HL) + 1)); SetFlags(ref regs, mem.Read8(regs.HL) == 0x00, false, CheckHalfCarryAdd(ref ?? 0x01), regs.CA); }),
+            new Opcode("UNIMP INC (HL)",        0, 12,   (ref Registers regs, Memory mem) => { mem.Write8(regs.HL, (byte)(mem.Read8(regs.HL) + 1)); SetFlags(ref regs, mem.Read8(regs.HL) == 0x00, false, false, regs.CA); }), //HC = CheckHalfCarryAdd(ref ???, 0x01)
             new Opcode("UNIMP DEC (HL)",        0, 12,   (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("LD (HL),0x{0:X2}",1, 12,   (ref Registers regs, Memory mem) => { mem.Write8(regs.HL, regs.Immediate8); }),
             new Opcode("UNIMP SCF",             0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
