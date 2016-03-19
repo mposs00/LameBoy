@@ -496,7 +496,7 @@
             this.groupBoxFlags.Controls.Add(this.flowLayoutPanelFlags);
             this.groupBoxFlags.Location = new System.Drawing.Point(4, 145);
             this.groupBoxFlags.Name = "groupBoxFlags";
-            this.groupBoxFlags.Size = new System.Drawing.Size(208, 57);
+            this.groupBoxFlags.Size = new System.Drawing.Size(212, 57);
             this.groupBoxFlags.TabIndex = 1;
             this.groupBoxFlags.TabStop = false;
             this.groupBoxFlags.Text = "Flags";
@@ -510,7 +510,7 @@
             this.flowLayoutPanelFlags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelFlags.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelFlags.Name = "flowLayoutPanelFlags";
-            this.flowLayoutPanelFlags.Size = new System.Drawing.Size(202, 38);
+            this.flowLayoutPanelFlags.Size = new System.Drawing.Size(206, 38);
             this.flowLayoutPanelFlags.TabIndex = 0;
             // 
             // checkBoxZ
@@ -579,7 +579,7 @@
             this.groupBoxRegisters.Controls.Add(this.numericUpDownPC);
             this.groupBoxRegisters.Location = new System.Drawing.Point(4, 3);
             this.groupBoxRegisters.Name = "groupBoxRegisters";
-            this.groupBoxRegisters.Size = new System.Drawing.Size(208, 136);
+            this.groupBoxRegisters.Size = new System.Drawing.Size(212, 136);
             this.groupBoxRegisters.TabIndex = 0;
             this.groupBoxRegisters.TabStop = false;
             this.groupBoxRegisters.Text = "Registers";

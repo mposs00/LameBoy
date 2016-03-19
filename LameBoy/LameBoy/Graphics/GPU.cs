@@ -15,19 +15,31 @@ namespace LameBoy.Graphics
         byte[,] frame;
         List<byte[,]> tiles;
         public bool drawing = false;
-        bool running;
+        public bool IsRunning {get; private set;}
         byte tileChecksum = 0;
         byte bgChecksum = 0;
 
-        public GPU(IntPtr Handle, IntPtr pgHandle)
+        /// <summary>
+        /// Starts the GPU with no associated runtime.
+        /// </summary>
+        public GPU()
+        {
+            frame = new byte[160, 144];
+            tiles = new List<byte[,]>();
+            Palette.SetColors(new byte[] { 0xE0, 0xF8, 0xD0 }, new byte[] { 0x88, 0xC0, 0x70 }, new byte[] { 0x34, 0x68, 0x56 }, new byte[] { 0x08, 0x18, 0x20 });
+            IsRunning = true;
+        }
+
+        /// <summary>
+        /// Starts the GPU along with an SDL runtime.
+        /// </summary>
+        /// <param name="Handle">The main form's handle</param>
+        /// <param name="pgHandle">The graphics panel's handle</param>
+        public GPU(IntPtr Handle, IntPtr pgHandle) : this()
         {
             sdlt = new SDLThread(Handle, pgHandle, this);
             Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
             sdlThread.Start();
-            frame = new byte[160,144];
-            tiles = new List<byte[,]>();
-            Palette.SetColors(new byte[] { 0xE0, 0xF8, 0xD0 }, new byte[] { 0x88, 0xC0, 0x70 }, new byte[] { 0x34, 0x68, 0x56 }, new byte[] { 0x08, 0x18, 0x20 });
-            running = true;
         }
 
         public void Shutdown()
@@ -44,6 +56,7 @@ namespace LameBoy.Graphics
             return 0;
         }
 
+        //xxx code smells start here
         public void SetScale(int scale)
         {
             sdlt.rt.scale = scale;
@@ -58,6 +71,7 @@ namespace LameBoy.Graphics
         {
             cart = NewCart;
         }
+        //end code smells
 
         public void UpdateYCounter(byte count)
         {
@@ -127,7 +141,7 @@ namespace LameBoy.Graphics
 
         public void RenderScene()
         {
-            while (running)
+            while (IsRunning)
             {
                 drawing = true;
                 if (cart == null)
@@ -248,7 +262,7 @@ namespace LameBoy.Graphics
         public void Terminate()
         {
             sdlt.Terminate();
-            running = false;
+            IsRunning = false;
         }
     }
 }

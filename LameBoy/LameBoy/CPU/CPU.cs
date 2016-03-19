@@ -9,7 +9,19 @@ namespace LameBoy
     public class CPU
     {
         public Registers registers = new Registers { PC = 0x100 };
-        public Cart GameCart {get; private set;}
+
+        private Cart _gameCart;
+        public Cart GameCart {
+            get
+            {
+                return _gameCart;
+            }
+            set
+            {
+                _gameCart = value;
+                gpu.SetCart(_gameCart);
+            }
+        }
 
         GPU gpu;
         byte instr;
@@ -34,13 +46,7 @@ namespace LameBoy
         {
             this.gpu = gpu;
             //Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
-            CPUState = State.Stopped;
-        }
-
-        public void SetCart(Cart NewCart)
-        {
-            GameCart = NewCart;
-            gpu.SetCart(GameCart);
+            CPUState = State.Paused;
         }
 
         public void SetScale(int scale)

@@ -52,7 +52,7 @@ namespace LameBoy
             if (okSelected == DialogResult.OK)
             {
                 Cart cart = new Cart(fd.FileName);
-                cpu.SetCart(cart);
+                cpu.GameCart = cart;
 
                 Console.WriteLine(cart.GetCartType());
 

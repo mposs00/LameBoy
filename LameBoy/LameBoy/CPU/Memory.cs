@@ -61,5 +61,17 @@ namespace LameBoy
         {
             get { return mem.Length; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Memory))
+                return false;
+            return ((Memory)obj).mem == mem || ((Memory)obj).mem.SequenceEqual(mem);
+        }
+
+        public override int GetHashCode()
+        {
+            return mem.GetHashCode();
+        }
     }
 }
