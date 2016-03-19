@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LameBoy", "LameBoy\LameBoy.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDL2-CS", "SDL2-CS\SDL2-CS.csproj", "{85480198-8711-4355-830E-72FD794AD3F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LameBoyTesting", "LameBoyTesting\LameBoyTesting.csproj", "{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{85480198-8711-4355-830E-72FD794AD3F6}.Release|x64.Build.0 = Release|x64
 		{85480198-8711-4355-830E-72FD794AD3F6}.Release|x86.ActiveCfg = Release|x86
 		{85480198-8711-4355-830E-72FD794AD3F6}.Release|x86.Build.0 = Release|x86
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Debug|x64.Build.0 = Debug|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Debug|x86.Build.0 = Debug|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Release|x64.ActiveCfg = Release|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Release|x64.Build.0 = Release|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Release|x86.ActiveCfg = Release|Any CPU
+		{13BA55BC-08FE-4D0E-B81C-E30F3C7A2A50}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
