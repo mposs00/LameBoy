@@ -95,7 +95,6 @@ namespace LameBoy
         //Main interpreter loop
         public void Execute()
         {
-            StringBuilder sb = new StringBuilder();
 
             while (gpu.drawing) { }
 
@@ -107,6 +106,7 @@ namespace LameBoy
             //debug output
             if (debugOut)
             {
+                StringBuilder sb = new StringBuilder();
                 string disasm = opcode.Disassembly;
                 if (disasm.Contains("X4"))
                     disasm = String.Format(disasm, registers.Immediate16);
@@ -124,6 +124,7 @@ namespace LameBoy
                 sb.Append("\n");
                 File.AppendAllText(@"log.txt", sb.ToString());
             }
+
             if (opcode.Disassembly.Contains("UNIMP"))
             {
                 string disasm = opcode.Disassembly;
