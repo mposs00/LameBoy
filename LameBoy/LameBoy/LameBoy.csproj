@@ -59,6 +59,7 @@
     <Compile Include="Debugger.Designer.cs">
       <DependentUpon>Debugger.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameBoy.cs" />
     <Compile Include="GoToAddressDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +67,8 @@
       <DependentUpon>GoToAddressDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\GPU.cs" />
+    <Compile Include="Graphics\IRenderRuntime.cs" />
+    <Compile Include="Graphics\IRenderThread.cs" />
     <Compile Include="Graphics\Palette.cs" />
     <Compile Include="Graphics\SDLException.cs" />
     <Compile Include="Graphics\SDLRuntime.cs" />

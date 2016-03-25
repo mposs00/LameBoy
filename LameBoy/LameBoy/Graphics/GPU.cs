@@ -10,8 +10,7 @@ namespace LameBoy.Graphics
 {
     public class GPU
     {
-        SDLThread sdlt;
-        Cart cart;
+        GameBoy owner;
         byte[,] frame;
         List<byte[,]> tiles;
         public bool drawing = false;
@@ -22,62 +21,30 @@ namespace LameBoy.Graphics
         /// <summary>
         /// Starts the GPU with no associated runtime.
         /// </summary>
-        public GPU()
+        public GPU(GameBoy owner)
         {
+            this.owner = owner;
+
             frame = new byte[160, 144];
             tiles = new List<byte[,]>();
             Palette.SetColors(new byte[] { 0xE0, 0xF8, 0xD0 }, new byte[] { 0x88, 0xC0, 0x70 }, new byte[] { 0x34, 0x68, 0x56 }, new byte[] { 0x08, 0x18, 0x20 });
             IsRunning = true;
         }
 
-        /// <summary>
-        /// Starts the GPU along with an SDL runtime.
-        /// </summary>
-        /// <param name="Handle">The main form's handle</param>
-        /// <param name="pgHandle">The graphics panel's handle</param>
-        public GPU(IntPtr Handle, IntPtr pgHandle) : this()
-        {
-            sdlt = new SDLThread(Handle, pgHandle, this);
-            Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
-            sdlThread.Start();
-        }
-
-        public void Shutdown()
-        {
-            sdlt.Terminate();
-        }
-
         public byte GetYCounter()
         {
-            if(cart != null)
+            if(owner != null && owner.Cart != null)
             {
-                return cart.Read8(0xFF44);
+                return owner.Cart.Read8(0xFF44);
             }
             return 0;
         }
 
-        //xxx code smells start here
-        public void SetScale(int scale)
-        {
-            sdlt.rt.scale = scale;
-        }
-
-        public void SetCPUExecutionState(State state)
-        {
-            sdlt.rt.CPUexecuting = state;
-        }
-
-        public void SetCart(Cart NewCart)
-        {
-            cart = NewCart;
-        }
-        //end code smells
-
         public void UpdateYCounter(byte count)
         {
-            if(cart != null)
+            if(owner != null && owner.Cart != null)
             {
-                cart.Write8(0xFF44, count);
+                owner.Cart.Write8(0xFF44, count);
             }
         }
         
@@ -102,7 +69,8 @@ namespace LameBoy.Graphics
 
         private void PushFrame()
         {
-            sdlt.rt.SetPixels(frame);
+            if(owner != null && owner.RenderThread != null)
+                owner.RenderThread.Runtime.Pixels = frame;
         }
 
         private void DrawTile(byte[,] tile, int xCoord, int yCoord)
@@ -124,7 +92,7 @@ namespace LameBoy.Graphics
             byte check = 0;
             for(int i = 0; i < 0x20; i++)
             {
-                check += cart.Read8(0x9800 + i);
+                check += owner.Cart.Read8(0x9800 + i);
             }
             return check != bgChecksum;
         }
@@ -134,7 +102,7 @@ namespace LameBoy.Graphics
             byte check = 0;
             for(int i = 0; i < 0xF0; i += 0x10)
             {
-                check += cart.Read8(0x8000 + (i * 0x10));
+                check += owner.Cart.Read8(0x8000 + (i * 0x10));
             }
             return check != tileChecksum;
         }
@@ -144,7 +112,7 @@ namespace LameBoy.Graphics
             while (IsRunning)
             {
                 drawing = true;
-                if (cart == null)
+                if (owner == null || owner.Cart == null)
                 {
                     //Splash screen
                     byte[,] L = DecodeTile(new byte[] { 0x00, 0x00, 0x60, 0x60, 0x60, 0x60, 0x60, 0x60, 0x60, 0x60, 0x60, 0x60, 0x7E, 0x7E, 0x00, 0x00 });
@@ -188,11 +156,11 @@ namespace LameBoy.Graphics
                             {
                                 //4329 = 1
                                 //378F = square block
-                                tile[i] = cart.Read8(0x8000 + (n * 0x10) + i);
+                                tile[i] = owner.Cart.Read8(0x8000 + (n * 0x10) + i);
                             }
                             if (n % 0x10 == 0)
                             {
-                                tileChecksum += cart.Read8(0x8000 + (n * 0x10));
+                                tileChecksum += owner.Cart.Read8(0x8000 + (n * 0x10));
                             }
                             tiles.Add(DecodeTile(tile));
                         }
@@ -203,13 +171,13 @@ namespace LameBoy.Graphics
                     {
                         for (int i = 0; i < 0x20; i++)
                         {
-                            bgChecksum += cart.Read8(0x9800 + i);
+                            bgChecksum += owner.Cart.Read8(0x9800 + i);
                         }
                         for (int y = 0; y < 0x20; y++)
                         {
                             for (int x = 0; x < 0x20; x++)
                             {
-                                int val = (int) cart.Read8(0x9800 + x + (y * 0x20));
+                                int val = (int) owner.Cart.Read8(0x9800 + x + (y * 0x20));
                                 if (val > tiles.Capacity)
                                     continue;
                                 if (val == 0)
@@ -227,7 +195,7 @@ namespace LameBoy.Graphics
                     {
                         for(int n = 0; n < 4; n++)
                         {
-                            OAM[(int)(i / 4), n] = cart.Read8(0xFE00 + i + n);
+                            OAM[(int)(i / 4), n] = owner.Cart.Read8(0xFE00 + i + n);
                         }
                     }
 
@@ -252,7 +220,7 @@ namespace LameBoy.Graphics
                     for (byte y = 0; y < 155; y++)
                     {
                         //Fix this somehow
-                        while (sdlt.rt.CPUexecuting != State.Running) { };
+                        while (owner.CPU.CPUState != State.Running) { };
                         UpdateYCounter(y);
                     }
                 }
@@ -261,7 +229,6 @@ namespace LameBoy.Graphics
 
         public void Terminate()
         {
-            sdlt.Terminate();
             IsRunning = false;
         }
     }

@@ -11,17 +11,7 @@ namespace LameBoy
         public Registers registers = new Registers { PC = 0x100 };
 
         private Cart _gameCart;
-        public Cart GameCart {
-            get
-            {
-                return _gameCart;
-            }
-            set
-            {
-                _gameCart = value;
-                gpu.SetCart(_gameCart);
-            }
-        }
+        public Cart GameCart {get; set;}
 
         GPU gpu;
         byte instr;
@@ -47,11 +37,6 @@ namespace LameBoy
             this.gpu = gpu;
             //Thread sdlThread = new Thread(new ThreadStart(sdlt.Render));
             CPUState = State.Paused;
-        }
-
-        public void SetScale(int scale)
-        {
-            gpu.SetScale(scale);
         }
 
         public void VblankInterrupt()
@@ -90,25 +75,21 @@ namespace LameBoy
             }
 
             CPUState = State.Stopped;
-            gpu.SetCPUExecutionState(CPUState);
         }
 
         public void Terminate()
         {
             CPUState |= State.Stopping;
-            gpu.SetCPUExecutionState(CPUState);
         }
 
         public void Pause()
         {
             CPUState = State.Paused;
-            gpu.SetCPUExecutionState(CPUState);
         }
 
         public void Resume()
         {
             CPUState = State.Running;
-            gpu.SetCPUExecutionState(CPUState);
         }
 
         //Main interpreter loop
@@ -118,7 +99,6 @@ namespace LameBoy
 
             while (gpu.drawing) { }
 
-            gpu.SetCPUExecutionState(State.Running);
             instr = GameCart.Read8(registers.PC);
             var opcode = OpcodeTable.Table[instr];
             registers.Immediate8 = GameCart.Read8(registers.PC + 1);
@@ -164,8 +144,6 @@ namespace LameBoy
             {
                 VblankInterrupt();
             }
-            if (CPUState == State.Paused)
-                gpu.SetCPUExecutionState(State.Paused);
         }
     }
 }

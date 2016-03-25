@@ -10,10 +10,7 @@ namespace LameBoy
 {
     public partial class MainForm : Form
     {
-        CPU cpu;
-        GPU gpu;
-        Thread cpuThread;
-        Thread gpuThread;
+        GameBoy gb;
 
         Debugger debuggerForm;
 
@@ -24,19 +21,17 @@ namespace LameBoy
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            gpu = new GPU(Handle, panelGraphics.Handle);
-            cpu = new CPU(gpu);
-            debuggerForm = new Debugger(cpu);
-            gpuThread = new Thread(new ThreadStart(gpu.RenderScene));
-            gpuThread.Start();
+            gb = new GameBoy();
+            SDLThread rt = new SDLThread(Handle, panelGraphics.Handle, gb);
+            gb.HookRenderer(rt);
+
+            debuggerForm = new Debugger(gb.CPU);
 
         }
 
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
         {
-            gpu.Shutdown();
-            gpu.Terminate();
-            cpu.Terminate();
+            gb.Shutdown();
         }
 
         private void menuItemOpenRom_Click(object sender, EventArgs e)
@@ -52,19 +47,13 @@ namespace LameBoy
             if (okSelected == DialogResult.OK)
             {
                 Cart cart = new Cart(fd.FileName);
-                cpu.GameCart = cart;
+                gb.LoadCart(cart);
 
                 Console.WriteLine(cart.GetCartType());
 
                 if(File.ReadAllBytes(fd.FileName).Length == 0x10000 && cart.GetCartType() == CartType.ROM)
                     //Doesn't execute CPU when loading a ramdump
                     return;
-
-                cpuThread = new Thread(new ThreadStart(cpu.ThreadStart));
-                cpuThread.Start();
-
-                gpuThread = new Thread(new ThreadStart(gpu.RenderScene));
-                gpuThread.Start();
 
                 debuggerForm.Initialize();
             }
@@ -97,32 +86,37 @@ namespace LameBoy
 
         private void menuItem10_Click(object sender, EventArgs e)
         {
+            if (gb.RenderThread == null) return;
             //scale 1
-            cpu.SetScale(1);
+            gb.RenderThread.Runtime.Scale = 1;
         }
 
         private void menuItem11_Click(object sender, EventArgs e)
         {
+            if (gb.RenderThread == null) return;
             //scale 2
-            cpu.SetScale(2);
+            gb.RenderThread.Runtime.Scale = 2;
         }
 
         private void menuItem12_Click(object sender, EventArgs e)
         {
+            if (gb.RenderThread == null) return;
             //scale 3
-            cpu.SetScale(3);
+            gb.RenderThread.Runtime.Scale = 3;
         }
 
         private void menuItem13_Click(object sender, EventArgs e)
         {
+            if (gb.RenderThread == null) return;
             //scale 4
-            cpu.SetScale(4);
+            gb.RenderThread.Runtime.Scale = 4;
         }
 
         private void menuItem14_Click(object sender, EventArgs e)
         {
+            if (gb.RenderThread == null) return;
             //scale 5
-            cpu.SetScale(5);
+            gb.RenderThread.Runtime.Scale = 5;
         }
 
         private void menuItem17_Click(object sender, EventArgs e)

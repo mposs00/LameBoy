@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace LameBoy.Graphics
 {
-    class SDLThread
+    class SDLThread : IRenderThread
     {
         [DllImport("user32.dll", SetLastError = true)]
         static extern IntPtr SetParent(IntPtr child, IntPtr newParent);
@@ -22,17 +22,20 @@ namespace LameBoy.Graphics
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr handle, IntPtr handleAfter, int x, int y, int cx, int cy, uint flags);
 
-        public SDLRuntime rt;
-        GPU gpu;
+        GameBoy owner;
         bool running;
 
-        public SDLThread(IntPtr Handle, IntPtr pgHandle, GPU gpu)
-        {
-            this.gpu = gpu;
-            rt = new SDLRuntime(gpu);
-            rt.Initialize();
+        private SDLRuntime _runtime;
+        public SDLRuntime Runtime { get { return _runtime; } private set { _runtime = value; } }
+        IRenderRuntime IRenderThread.Runtime { get { return _runtime; } }
 
-            IntPtr rtHandle = rt.Handle;
+        public SDLThread(IntPtr Handle, IntPtr pgHandle, GameBoy owner)
+        {
+            this.owner = owner;
+            Runtime = new SDLRuntime(owner);
+            Runtime.Initialize();
+
+            IntPtr rtHandle = Runtime.Handle;
             //Debug.WriteLine(rtHandle);
 
             SetWindowPos(rtHandle, Handle, 0, 0, 0, 0, 0x0401); //0x400 = SHOWWINDOW
@@ -48,7 +51,7 @@ namespace LameBoy.Graphics
             while (running)
             {
                 time.Start();
-                rt.Render();
+                Runtime.Render();
                 time.Stop();
                 extraTime = (int) (16 - time.ElapsedMilliseconds);
                 if (extraTime > 0)
@@ -61,7 +64,7 @@ namespace LameBoy.Graphics
         public void Terminate()
         {
             running = false;
-            rt.Destroy();
+            Runtime.Destroy();
         }
     }
 }

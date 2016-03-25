@@ -5,9 +5,9 @@ using static SDL2.SDL;
 
 namespace LameBoy.Graphics
 {
-    public class SDLRuntime
+    public class SDLRuntime : IRenderRuntime
     {
-        GPU gpu;
+        GameBoy owner;
         public IntPtr Window { get; private set; }
         public IntPtr Surface { get; private set; }
         public IntPtr Handle {
@@ -20,13 +20,12 @@ namespace LameBoy.Graphics
             }
         }
         public IntPtr Renderer;
-        public byte[,] pixels;
-        public int scale = 5;
-        public State CPUexecuting = State.Running;
+        public byte[,] Pixels { get; set; }
+        public int Scale { get; set; } = 5;
 
-        public SDLRuntime(GPU gpu)
+        public SDLRuntime(GameBoy owner)
         {
-            this.gpu = gpu;
+            this.owner = owner;
         }
 
         public void Initialize()
@@ -43,19 +42,14 @@ namespace LameBoy.Graphics
             Renderer = SDL_GetRenderer(Window);
         }
 
-        public void SetPixels(byte[,] source)
-        {
-            pixels = source;
-        }
-
         public void Render()
         {
             //while(CPUexecuting){ }
-            while (gpu.drawing) { }
+            while (owner.GPU.drawing) { }
 
             SDL_Surface surf = (SDL_Surface)Marshal.PtrToStructure(Surface, typeof(SDL_Surface));
 
-            if (pixels == null)
+            if (Pixels == null)
                 return;
 
             for (int y = 0; y < 144; y++)
@@ -63,19 +57,19 @@ namespace LameBoy.Graphics
                 for(int x = 0; x < 160; x++)
                 {
                     byte r, g, b;
-                    if (pixels[x, y] == 0)
+                    if (Pixels[x, y] == 0)
                     {
                         r = Palette.blankR;
                         g = Palette.blankG;
                         b = Palette.blankB;
                     }
-                    else if (pixels[x, y] == 1)
+                    else if (Pixels[x, y] == 1)
                     {
                         r = Palette.lightR;
                         g = Palette.lightG;
                         b = Palette.lightB;
                     }
-                    else if (pixels[x, y] == 2)
+                    else if (Pixels[x, y] == 2)
                     {
                         r = Palette.darkR;
                         g = Palette.darkG;
@@ -87,7 +81,7 @@ namespace LameBoy.Graphics
                         g = Palette.solidG;
                         b = Palette.solidB;
                     }
-                    var rect = new SDL_Rect { x = x * scale, y = y * scale, w = scale, h = scale };
+                    var rect = new SDL_Rect { x = x * Scale, y = y * Scale, w = Scale, h = Scale };
                     SDL_FillRect(Surface, ref rect, SDL_MapRGBA(surf.format, r, g, b, 255));
                 }
             }

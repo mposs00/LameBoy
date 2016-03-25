@@ -14,27 +14,25 @@ namespace LameBoyTesting
         [TestMethod]
         public void StartGPUTest()
         {
-            GPU gpu = new GPU();
-            Assert.IsTrue(gpu.IsRunning);
+            GameBoy gb = new GameBoy();
+            Assert.IsTrue(gb.GPU.IsRunning);
         }
 
         [TestMethod]
         public void StartCPUTest()
         {
-            GPU gpu = new GPU();
-            CPU cpu = new CPU(gpu);
-            Assert.AreEqual(cpu.CPUState, State.Paused);
+            GameBoy gb = new GameBoy();
+            Assert.AreEqual(gb.CPU.CPUState, State.Paused);
         }
 
         [TestMethod]
         public void LoadTest()
         {
-            GPU gpu = new GPU();
-            CPU cpu = new CPU(gpu);
+            GameBoy gb = new GameBoy();
             Cart cart = CartTests.LoadCart("cpu_instrs.gb");
 
             try {
-                cpu.GameCart = cart;
+                gb.LoadCart(cart);
             } catch (Exception e)
             {
                 Assert.Fail(e.Message);
@@ -45,29 +43,25 @@ namespace LameBoyTesting
         [Timeout(100)]
         public void OneCycleTest()
         {
-            GPU gpu = new GPU();
-            CPU cpu = new CPU(gpu);
+            GameBoy gb = new GameBoy();
             Cart cart = CartTests.LoadCart("cpu_instrs.gb");
-            cpu.GameCart = cart;
+            gb.LoadCart(cart);
 
-            cpu.Execute();
-            Assert.AreNotEqual(0x100, cpu.registers.PC);
+            gb.CPU.Execute();
+            Assert.AreNotEqual(0x100, gb.CPU.registers.PC);
         }
 
         [TestMethod]
         [Timeout(1200)]
         public void OneSecondTest()
         {
-            GPU gpu = new GPU();
-            CPU cpu = new CPU(gpu);
+            GameBoy gb = new GameBoy();
             Cart cart = CartTests.LoadCart("cpu_instrs.gb");
-            cpu.GameCart = cart;
+            gb.LoadCart(cart);
 
-            Thread thread = new Thread(new ThreadStart(cpu.ThreadStart));
-            thread.Start();
-            cpu.Resume();
+            gb.Start();
             Thread.Sleep(1000);
-            cpu.Terminate();
+            gb.Shutdown();
         }
     }
 }
