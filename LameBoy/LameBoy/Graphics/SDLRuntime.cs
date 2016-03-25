@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 using static SDL2.SDL;
 
 namespace LameBoy.Graphics
