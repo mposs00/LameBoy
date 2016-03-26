@@ -1,2 +1,4 @@
 language: csharp
 solution: LameBoy/LameBoy.sln
+script:
+  - ./copysdl.sh
