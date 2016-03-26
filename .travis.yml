@@ -1,2 +1,2 @@
 language: csharp
-solution: LameBoy.sln
+solution: LameBoy/LameBoy.sln
