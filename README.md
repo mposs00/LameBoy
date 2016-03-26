@@ -1,6 +1,6 @@
 ﻿# LameBoy
 
-![Travis CI](https://travis-ci.org/ASSympt0te/LameBoy.svg?branch=master)
+[![Build Status](https://travis-ci.org/ASSympt0te/LameBoy.svg?branch=master)](https://travis-ci.org/ASSympt0te/LameBoy)
 
 LameBoy is a work-in-progress Game Boy emulator written in C#, with an original code base and design (albeit with a bit of inspiration from [bgb](http://bgb.bircd.org/)).
 
