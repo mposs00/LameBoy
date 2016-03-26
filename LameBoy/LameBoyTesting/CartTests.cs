@@ -1,11 +1,11 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LameBoy;
+using NUnit.Framework;
 using System.IO;
 
 namespace LameBoyTesting
 {
-    [TestClass]
+    [TestFixture]
     public class CartTests
     {
         private static readonly string cartPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, @"..\roms\");
@@ -23,7 +23,7 @@ namespace LameBoyTesting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void FileLoadTest()
         {
             Cart cart = LoadCart("cpu_instrs.gb");
@@ -31,19 +31,24 @@ namespace LameBoyTesting
             Assert.IsNotNull(cart.RAM);
         }
 
-        [TestMethod]
+        [Test]
         public void CartTypeTest()
         {
             Cart cart = LoadCart("cpu_instrs.gb");
             Assert.AreEqual(CartType.MBC1, cart.Type);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FileNotFoundException))]
+        [Test]
         public void BadCartPathTest()
         {
             Cart cart = new Cart(Path.Combine(cartPath, "blahblahblah.gbnevertobefound"));
             Assert.IsNull(cart);
+            Assert.Throws<FileNotFoundException>(_BadCartPathTestBody);
+        }
+
+        private void _BadCartPathTestBody()
+        {
+            Cart cart = new Cart(Path.Combine(cartPath, "blahblahblah.gbnevertobefound"));
         }
     }
 }

@@ -1,29 +1,33 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using LameBoy;
 
 namespace LameBoyTesting
 {
-    [TestClass]
+    [TestFixture]
     public class MemoryTests
     {
-        [TestMethod]
+        [Test]
         public void ConstructorTest()
         {
             Memory mem = new Memory(65536);
             Assert.IsNotNull(mem);
         }
 
-        [TestMethod]
+        [Test]
         public void Read8Test()
         {
             Memory mem = new Memory(65536);
             Assert.AreEqual(mem.Read8(0), 0);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [Test]
         public void Read8OutOfBoundsTest()
+        {
+            Assert.Throws<IndexOutOfRangeException>(_Read8OutOfBoundsTestBody);
+        }
+
+        private void _Read8OutOfBoundsTestBody()
         {
             Memory mem = new Memory(65536);
             mem.Read8(65536);
@@ -36,9 +40,13 @@ namespace LameBoyTesting
             Assert.AreEqual(mem.Read8(1), 0x0D);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [Test]
         public void Write8OutOfBoundsTest()
+        {
+            Assert.Throws<IndexOutOfRangeException>(_Write8OutOfBountsTestBody);
+        }
+
+        private void _Write8OutOfBountsTestBody()
         {
             Memory mem = new Memory(65536);
             mem.Write8(65536, 0x88);
@@ -53,9 +61,13 @@ namespace LameBoyTesting
             Assert.AreEqual(mem.Read16(1), (ushort)0x4561);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [Test]
         public void Read16OutOfBoundsTest()
+        {
+            Assert.Throws<IndexOutOfRangeException>(_Read16OutOfBoundsTestBody);
+        }
+
+        private void _Read16OutOfBoundsTestBody()
         {
             Memory mem = new Memory(65536);
             mem.Read16(65535);
@@ -69,15 +81,19 @@ namespace LameBoyTesting
             Assert.AreEqual(mem.Read16(4), (ushort)0xFBA4);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(IndexOutOfRangeException))]
+        [Test]
         public void Write16OutOfBoundsTest()
+        {
+            Assert.Throws<IndexOutOfRangeException>(_Write16OutOfBoundsTestBody);
+        }
+
+        private void _Write16OutOfBoundsTestBody()
         {
             Memory mem = new Memory(65536);
             mem.Write16(65535, 0x994F);
         }
 
-        [TestMethod]
+        [Test]
         public void CopyTest()
         {
             Memory mem1 = new Memory(65536);
@@ -91,7 +107,7 @@ namespace LameBoyTesting
             Assert.AreEqual(mem1, mem2);
         }
 
-        [TestMethod]
+        [Test]
         public void LengthTest()
         {
             Memory mem = new Memory(465789);

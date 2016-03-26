@@ -1,31 +1,29 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using LameBoy;
-using LameBoy.Graphics;
-using System.Diagnostics;
 using System.Threading;
 
 namespace LameBoyTesting
 {
-    [TestClass]
+    [TestFixture]
     public class CPUTests
     {
 
-        [TestMethod]
+        [Test]
         public void StartGPUTest()
         {
             GameBoy gb = new GameBoy();
             Assert.IsTrue(gb.GPU.IsRunning);
         }
 
-        [TestMethod]
+        [Test]
         public void StartCPUTest()
         {
             GameBoy gb = new GameBoy();
             Assert.AreEqual(gb.CPU.CPUState, State.Paused);
         }
 
-        [TestMethod]
+        [Test]
         public void LoadTest()
         {
             GameBoy gb = new GameBoy();
@@ -39,7 +37,7 @@ namespace LameBoyTesting
             }
         }
 
-        [TestMethod]
+        [Test]
         [Timeout(100)]
         public void OneCycleTest()
         {
@@ -51,7 +49,7 @@ namespace LameBoyTesting
             Assert.AreNotEqual(0x100, gb.CPU.registers.PC);
         }
 
-        [TestMethod]
+        [Test]
         [Timeout(1200)]
         public void OneSecondTest()
         {
