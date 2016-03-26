@@ -41,8 +41,6 @@ namespace LameBoyTesting
         [Test]
         public void BadCartPathTest()
         {
-            Cart cart = new Cart(Path.Combine(cartPath, "blahblahblah.gbnevertobefound"));
-            Assert.IsNull(cart);
             Assert.Throws<FileNotFoundException>(_BadCartPathTestBody);
         }
 
