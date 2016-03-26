@@ -4,7 +4,7 @@ script:
   - ./copysdl.sh
 install:
   - nuget restore LameBoy/LameBoy.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+  - nuget install NUnit.Runners -Version 3.2.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release LameBoy/LameBoy.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe LameBoy/LameBoyTesting/bin/Release/LameBoyTesting.dll
+  - mono ./testrunner/NUnit.Runners.3.2.0/tools/nunit-console.exe LameBoy/LameBoyTesting/bin/Release/LameBoyTesting.dll
