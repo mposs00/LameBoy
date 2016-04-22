@@ -3,6 +3,7 @@ using LameBoy.Graphics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace LameBoy
 {
@@ -16,6 +17,9 @@ namespace LameBoy
         GPU gpu;
         byte instr;
         bool debugOut = false;
+
+        public int ClockSpeed { get; private set; } = 0x400000;
+        public int TotalCycles { get; private set; } = 0;
 
         private State _cpustate;
         public State CPUState {
@@ -56,6 +60,7 @@ namespace LameBoy
 
         public void ThreadLoop()
         {
+            Stopwatch sw = new Stopwatch();
             while (true)
             {
                 if ((CPUState & State.Stopping) != 0)
@@ -71,7 +76,19 @@ namespace LameBoy
                     continue;
                 }
 
-                Execute();
+                sw.Start();
+                for (int _ = 0; _ < 20000; _++)
+                {
+                    Execute();
+                    TotalCycles++;
+                }
+                sw.Stop();
+
+                double clockDiff = sw.ElapsedMilliseconds - 1000d / (ClockSpeed / 20000);
+                if (clockDiff < 0)
+                    Thread.Sleep((int)(-clockDiff));
+
+                sw.Reset();
             }
 
             CPUState = State.Stopped;
@@ -139,7 +156,14 @@ namespace LameBoy
             }
 
             registers.PC += opcode.Length;
+            registers.M = opcode.M;
+            registers.T = opcode.T;
+
             opcode.Execute(ref registers, GameCart.RAM);
+
+            registers.TotalM += registers.M;
+            registers.TotalT += registers.T;
+
             //gpu.SetCPUExecutionState(false);
             if (gpu.GetYCounter() == 154 && registers.Interrupts)
             {

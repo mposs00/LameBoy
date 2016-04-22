@@ -8,7 +8,7 @@ namespace LameBoyTesting
     [TestFixture]
     public class CartTests
     {
-        private static readonly string cartPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, @"..\roms\");
+        private static readonly string cartPath = Path.Combine(Directory.GetParent(TestContext.CurrentContext.TestDirectory).Parent.FullName, @"..\roms\");
 
         public static Cart LoadCart(string name)
         {

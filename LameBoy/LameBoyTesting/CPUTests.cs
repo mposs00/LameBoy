@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using LameBoy;
 using System.Threading;
+using System.Diagnostics;
 
 namespace LameBoyTesting
 {
@@ -60,6 +61,30 @@ namespace LameBoyTesting
             gb.Start();
             Thread.Sleep(1000);
             gb.Shutdown();
+        }
+
+        [Test]
+        //[Timeout(1200)]
+        public void OneSecondClockTest()
+        {
+            GameBoy gb = new GameBoy();
+            Cart cart = CartTests.LoadCart("cpu_instrs.gb");
+            gb.LoadCart(cart);
+
+            gb.Start();
+            
+            Stopwatch sw = Stopwatch.StartNew();
+            Thread.Sleep(1000);
+            sw.Stop();
+            gb.Shutdown();
+
+            //crazy hacks needed to join thread
+            ((Thread)(typeof(GameBoy).GetField("cpuThread", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(gb))).Join();
+
+            Console.WriteLine("Total cycles: {0}", gb.CPU.TotalCycles);
+
+            double clock = gb.CPU.TotalCycles / (sw.ElapsedMilliseconds / 1000d);
+            Assert.AreEqual(0x400000, clock, 250000);
         }
     }
 }

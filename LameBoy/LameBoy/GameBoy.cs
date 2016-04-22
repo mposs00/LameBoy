@@ -10,7 +10,7 @@ namespace LameBoy
         public Cart Cart { get; private set; }
         public IRenderThread RenderThread { get; private set; }
 
-        public bool Powered { get; private set; }
+        public bool Powered { get; private set; } = false;
 
         Thread cpuThread, gpuThread, rtThread;
 

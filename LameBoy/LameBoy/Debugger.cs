@@ -293,5 +293,11 @@ namespace LameBoy
                 listViewDisassemblyROM.EnsureVisible(index);
             }
         }
+
+        private void Debugger_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Hide();
+            e.Cancel = true;
+        }
     }
 }

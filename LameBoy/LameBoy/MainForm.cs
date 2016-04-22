@@ -1,6 +1,7 @@
 ﻿using LameBoy.Graphics;
 using System;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LameBoy
@@ -8,7 +9,7 @@ namespace LameBoy
     public partial class MainForm : Form
     {
         GameBoy gb;
-
+        SDLThread rt;
         Debugger debuggerForm;
 
         public MainForm()
@@ -19,7 +20,8 @@ namespace LameBoy
         private void MainForm_Load(object sender, EventArgs e)
         {
             gb = new GameBoy();
-            SDLThread rt = new SDLThread(Handle, panelGraphics.Handle, gb);
+            rt = new SDLThread(Handle, panelGraphics.Handle, gb);
+
             gb.HookRenderer(rt);
 
             debuggerForm = new Debugger(gb.CPU);
@@ -28,6 +30,7 @@ namespace LameBoy
 
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
         {
+            rt.Terminate();
             gb.Shutdown();
         }
 

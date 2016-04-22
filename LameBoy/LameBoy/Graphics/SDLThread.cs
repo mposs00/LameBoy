@@ -23,6 +23,7 @@ namespace LameBoy.Graphics
         bool running;
 
         private SDLRuntime _runtime;
+        private Thread _thread;
         public SDLRuntime Runtime { get { return _runtime; } private set { _runtime = value; } }
         IRenderRuntime IRenderThread.Runtime { get { return _runtime; } }
 
@@ -30,7 +31,9 @@ namespace LameBoy.Graphics
         {
             this.owner = owner;
             Runtime = new SDLRuntime(owner);
-            Runtime.Initialize();
+
+            _thread = new Thread(new ThreadStart(Runtime.Initialize));
+            _thread.Start();
 
             IntPtr rtHandle = Runtime.Handle;
             //Debug.WriteLine(rtHandle);
