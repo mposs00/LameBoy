@@ -2,7 +2,9 @@
 {
     public interface IRenderThread
     {
-        IRenderRuntime Runtime { get; }
+        byte[,] Pixels { get; set; }
+        int Scale { get; set; }
+
         void Render();
         void Terminate();
     }

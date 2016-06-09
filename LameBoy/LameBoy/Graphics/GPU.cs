@@ -67,7 +67,7 @@ namespace LameBoy.Graphics
         private void PushFrame()
         {
             if(owner != null && owner.RenderThread != null)
-                owner.RenderThread.Runtime.Pixels = frame;
+                owner.RenderThread.Pixels = frame;
         }
 
         private void DrawTile(byte[,] tile, int xCoord, int yCoord)

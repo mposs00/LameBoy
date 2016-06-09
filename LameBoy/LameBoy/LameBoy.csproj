@@ -67,11 +67,9 @@
       <DependentUpon>GoToAddressDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\GPU.cs" />
-    <Compile Include="Graphics\IRenderRuntime.cs" />
     <Compile Include="Graphics\IRenderThread.cs" />
     <Compile Include="Graphics\Palette.cs" />
     <Compile Include="Graphics\SDLException.cs" />
-    <Compile Include="Graphics\SDLRuntime.cs" />
     <Compile Include="Graphics\SDLThread.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

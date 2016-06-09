@@ -90,35 +90,35 @@ namespace LameBoy
         {
             if (gb.RenderThread == null) return;
             //scale 1
-            gb.RenderThread.Runtime.Scale = 1;
+            gb.RenderThread.Scale = 1;
         }
 
         private void menuItem11_Click(object sender, EventArgs e)
         {
             if (gb.RenderThread == null) return;
             //scale 2
-            gb.RenderThread.Runtime.Scale = 2;
+            gb.RenderThread.Scale = 2;
         }
 
         private void menuItem12_Click(object sender, EventArgs e)
         {
             if (gb.RenderThread == null) return;
             //scale 3
-            gb.RenderThread.Runtime.Scale = 3;
+            gb.RenderThread.Scale = 3;
         }
 
         private void menuItem13_Click(object sender, EventArgs e)
         {
             if (gb.RenderThread == null) return;
             //scale 4
-            gb.RenderThread.Runtime.Scale = 4;
+            gb.RenderThread.Scale = 4;
         }
 
         private void menuItem14_Click(object sender, EventArgs e)
         {
             if (gb.RenderThread == null) return;
             //scale 5
-            gb.RenderThread.Runtime.Scale = 5;
+            gb.RenderThread.Scale = 5;
         }
 
         private void menuItem17_Click(object sender, EventArgs e)
