@@ -18,6 +18,9 @@ namespace LameBoy
         {
             GPU = new GPU(this);
             CPU = new CPU(GPU);
+
+            gpuThread = new Thread(new ThreadStart(GPU.RenderScene));
+            gpuThread.Start();
         }
 
         public void LoadCart(Cart cart)
@@ -32,7 +35,8 @@ namespace LameBoy
 
             RenderThread = rt;
 
-            if(Powered) StartRenderThread();
+            //if(Powered)
+                StartRenderThread();
         }
 
         public void UnhookRenderer()
@@ -55,9 +59,6 @@ namespace LameBoy
 
             cpuThread = new Thread(new ThreadStart(CPU.ThreadStart));
             cpuThread.Start();
-
-            gpuThread = new Thread(new ThreadStart(GPU.RenderScene));
-            gpuThread.Start();
 
             if (RenderThread != null) StartRenderThread();
 

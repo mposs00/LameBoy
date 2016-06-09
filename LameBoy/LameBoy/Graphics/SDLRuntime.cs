@@ -22,6 +22,8 @@ namespace LameBoy.Graphics
         public byte[,] Pixels { get; set; }
         public int Scale { get; set; } = 5;
 
+        bool renderCalled = false, running = false;
+
         public SDLRuntime(GameBoy owner)
         {
             this.owner = owner;
@@ -39,9 +41,25 @@ namespace LameBoy.Graphics
 
             Surface = SDL_GetWindowSurface(Window);
             Renderer = SDL_GetRenderer(Window);
+
+            running = true;
+            MainLoop();
         }
 
-        public void Render()
+        void MainLoop()
+        {
+            while(running)
+            {
+                if (renderCalled)
+                {
+                    Draw();
+                    renderCalled = false;
+                }
+            }
+            CleanupSDL();
+        }
+
+        void Draw()
         {
             //while(CPUexecuting){ }
             while (owner.GPU.drawing) { }
@@ -87,7 +105,17 @@ namespace LameBoy.Graphics
             SDL_UpdateWindowSurface(Window);
         }
 
+        public void Render()
+        {
+            renderCalled = true;
+        }
+
         public void Destroy()
+        {
+            running = false;
+        }
+
+        void CleanupSDL()
         {
             SDL_FreeSurface(Surface);
             SDL_DestroyWindow(Window);

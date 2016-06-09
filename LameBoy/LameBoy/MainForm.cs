@@ -51,10 +51,12 @@ namespace LameBoy
 
                 Console.WriteLine(cart.GetCartType());
 
-                if(File.ReadAllBytes(fd.FileName).Length == 0x10000 && cart.GetCartType() == CartType.ROM)
+                if (File.ReadAllBytes(fd.FileName).Length == 0x10000 && cart.GetCartType() == CartType.ROM)
+                {
                     //Doesn't execute CPU when loading a ramdump
                     return;
-
+                }
+                gb.Start();
                 debuggerForm.Initialize();
             }
         }

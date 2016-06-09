@@ -67,12 +67,13 @@
             return result;
         }
 
+        //XXX: Replace with bitwise.
         private static void DecodeCB(byte opcode, ref Registers regs, ref Memory mem)
         {
             int instrType = (opcode & 0xC0) >> 6;
             int argument = (opcode & 0x38) >> 3;
             int register = (opcode & 0x7);
-
+            
             bool[] bits = new bool[0];
 
             switch (instrType)
@@ -250,7 +251,7 @@
             new Opcode("LD H, 0x{0:X2}",  0, 8,    (ref Registers regs, Memory mem) => { regs.H = regs.Immediate8; }),
             new Opcode("UNIMP RLA",             0, 4,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("JR Z, 0x{0:X2}",     0, 12,   (ref Registers regs, Memory mem) => { if(!regs.Z) return; if(regs.Immediate8 >= 128) regs.PC -= (ushort) (256 - regs.Immediate8); else regs.PC += regs.Immediate8; }),
-            new Opcode("UNIMP ADD HL, DE",      0, 8,    (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("UNIMP ADD HL, DE",      0, 8,    (ref Registers regs, Memory mem) => { regs.HL += regs.DE; /*todo set flags*/}),
             new Opcode("LD A, (DE)",      0, 8,    (ref Registers regs, Memory mem) => { regs.A = mem.Read8(regs.DE); }),
             new Opcode("DEC DE",          0, 8,    (ref Registers regs, Memory mem) => { regs.DE--; }),
             new Opcode("INC E",           0, 4,    (ref Registers regs, Memory mem) => { regs.E++; SetFlags(ref regs, regs.E == 0x00, false, CheckHalfCarryAdd(ref regs.E, 0x01), regs.CA); }),
@@ -402,24 +403,24 @@
             new Opcode("CP (HL)",         0, 8,    (ref Registers regs, Memory mem) => { byte ptrHL = mem.Read8(regs.HL); SetFlags(ref regs, regs.A == ptrHL,  true, CheckHalfCarrySubtract(ref regs.A, ptrHL),  regs.A > ptrHL);  }),
             new Opcode("CP A",            0, 4,    (ref Registers regs, Memory mem) => {                                  SetFlags(ref regs, true            , true, true                                      , false          ); }),
 /*0xC0*/    new Opcode("RET NZ",          0, 20,   (ref Registers regs, Memory mem) => { if(regs.Z) return; regs.PC = Pop(ref mem, ref regs); }),
-            new Opcode("UNIMP POP BC",          0, 12,   (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP JP NZ, ${0:X4}",  2, 16,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("POP BC",          0, 12,   (ref Registers regs, Memory mem) => { regs.BC = Pop(ref mem, ref regs); }),
+            new Opcode("JP NZ, ${0:X4}",  2, 16,   (ref Registers regs, Memory mem) => { if(!regs.Z) regs.PC = regs.Immediate16; }),
             new Opcode("JP ${0:X4}",      2, 16,   (ref Registers regs, Memory mem) => { regs.PC = regs.Immediate16; }),
-            new Opcode("UNIMP CALL NZ, ${0:X4}",2, 24,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("CALL NZ, ${0:X4}",2, 24,   (ref Registers regs, Memory mem) => { if(!regs.Z) { regs.PC += 3; Push(regs.PC, ref mem, ref regs); regs.PC = regs.Immediate16; } }),
             new Opcode("PUSH BC",           0, 1,    (ref Registers regs, Memory mem) => { Push(regs.BC, ref mem, ref regs); }),
-            new Opcode("UNIMP ADD A, {0:X2}",   1, 8,    (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("ADD A, {0:X2}",   1, 8,    (ref Registers regs, Memory mem) => { regs.A += regs.Immediate8; SetFlags(ref regs, regs.A == 0x00, regs.S, CheckHalfCarryAdd(ref regs.A, regs.Immediate8), false); /*todo add carry flag*/}),
             new Opcode("UNIMP RST 00h",         0, 16,   (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("RET Z",           0, 20,   (ref Registers regs, Memory mem) => { if(regs.Z) regs.PC = Pop(ref mem, ref regs); }),
             new Opcode("RET",             0, 16,   (ref Registers regs, Memory mem) => { regs.PC = Pop(ref mem, ref regs); }),
-            new Opcode("UNIMP JP Z, ${0:X4}",   2, 16,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("JP Z, ${0:X4}",   2, 16,   (ref Registers regs, Memory mem) => { if(regs.Z) regs.PC = regs.Immediate16; }),
             new Opcode("CB Prefix",       0, 1,    (ref Registers regs, Memory mem) => { DecodeCB(regs.Immediate8, ref regs, ref mem); }),
-            new Opcode("UNIMP CALL Z, ${0:X4}", 2, 24,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("CALL Z, ${0:X4}", 2, 24,   (ref Registers regs, Memory mem) => { if(regs.Z) { regs.PC += 3;  Push(regs.PC, ref mem, ref regs); regs.PC = regs.Immediate16; } }),
             new Opcode("CALL ${0:X4}",    1, 24,   (ref Registers regs, Memory mem) => { regs.PC += 3; Push(regs.PC, ref mem, ref regs); regs.PC = regs.Immediate16; }), //Don't change length on call/ret, it screws everything up
-            new Opcode("UNIMP ADC A, {0:X2}",   1, 8,    (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("ADC A, {0:X2}",   1, 8,    (ref Registers regs, Memory mem) => { regs.A += regs.Immediate8; SetFlags(ref regs, regs.A == 0, false, CheckHalfCarryAdd(ref regs.A, regs.Immediate8), false); }),
             new Opcode("UNIMP RST 08h",         0, 16,   (ref Registers regs, Memory mem) => { /*TODO*/}),
 /*0xD0*/    new Opcode("RET NC",          0, 20,   (ref Registers regs, Memory mem) => { if(!regs.CA) regs.PC = Pop(ref mem, ref regs); }),
-            new Opcode("UNIMP POP DE",          0, 12,   (ref Registers regs, Memory mem) => { /*TODO*/}),
-            new Opcode("UNIMP JP NC, ${0:X4}",  2, 16,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("POP DE",          0, 12,   (ref Registers regs, Memory mem) => { regs.DE = Pop(ref mem, ref regs); }),
+            new Opcode("JP NC, ${0:X4}",  2, 16,   (ref Registers regs, Memory mem) => { if(!regs.CA) {regs.PC += 3; Push(regs.PC, ref mem, ref regs); regs.PC = regs.Immediate16; } }),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("UNIMP CALL NC, ${0:X4}",2, 24,   (ref Registers regs, Memory mem) => { /*TODO*/}),
             new Opcode("PUSH DE",           0, 16,   (ref Registers regs, Memory mem) => { Push(regs.DE, ref mem, ref regs); }),
