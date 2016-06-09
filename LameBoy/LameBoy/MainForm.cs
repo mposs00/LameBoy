@@ -12,9 +12,12 @@ namespace LameBoy
         SDLThread rt;
         Debugger debuggerForm;
 
+        readonly MenuItem[] scaleItems;
+
         public MainForm()
         {
             InitializeComponent();
+            scaleItems = new[] { menuItem10, menuItem11, menuItem12, menuItem13, menuItem14 };
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -26,6 +29,7 @@ namespace LameBoy
 
             debuggerForm = new Debugger(gb.CPU);
 
+            scaleItems[gb.RenderThread.Scale - 1].Checked = true;
         }
 
         private void MainForm_Closing(object sender, FormClosingEventArgs e)
@@ -88,37 +92,37 @@ namespace LameBoy
 
         private void menuItem10_Click(object sender, EventArgs e)
         {
-            if (gb.RenderThread == null) return;
-            //scale 1
-            gb.RenderThread.Scale = 1;
+            SetRenderScaleCheckedState(1);
         }
 
         private void menuItem11_Click(object sender, EventArgs e)
         {
-            if (gb.RenderThread == null) return;
-            //scale 2
-            gb.RenderThread.Scale = 2;
+            SetRenderScaleCheckedState(2);
         }
 
         private void menuItem12_Click(object sender, EventArgs e)
         {
-            if (gb.RenderThread == null) return;
-            //scale 3
-            gb.RenderThread.Scale = 3;
+            SetRenderScaleCheckedState(3);
         }
 
         private void menuItem13_Click(object sender, EventArgs e)
         {
-            if (gb.RenderThread == null) return;
-            //scale 4
-            gb.RenderThread.Scale = 4;
+            SetRenderScaleCheckedState(4);
         }
 
         private void menuItem14_Click(object sender, EventArgs e)
         {
+            SetRenderScaleCheckedState(5);
+        }
+
+        private void SetRenderScaleCheckedState(int scale)
+        {
             if (gb.RenderThread == null) return;
-            //scale 5
-            gb.RenderThread.Scale = 5;
+
+            scaleItems[gb.RenderThread.Scale - 1].Checked = false;
+            scaleItems[scale - 1].Checked = true;
+
+            gb.RenderThread.Scale = scale;
         }
 
         private void menuItem17_Click(object sender, EventArgs e)
