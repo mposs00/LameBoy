@@ -10,32 +10,57 @@
             regs.CA = CA;
         }
 
+        /// <summary>
+        /// Checks the carry from bit 3 to bit 4.
+        /// </summary>
+        /// <returns>Boolean value of the HC flag</returns>
         private static bool CheckHalfCarryAdd(ref byte reg, byte add)
         {
             return (((reg & 0x0F) + (add & 0x0F)) & 0x10) == 0x10;
         }
 
+        /// <summary>
+        /// Checks the carry from bit 3 to bit 4 in subtraction.
+        /// </summary>
+        /// <returns>Boolean value of the HC flag</returns>
         private static bool CheckHalfCarrySubtract(ref byte reg, byte sub)
         {
             return (((reg & 0xF0) - (sub & 0xF0)) & 0x08) == 0x08;
         }
 
+        /// <summary>
+        /// Checks the carry from bit 7 to bit 8 in addition.
+        /// </summary>
+        /// <param name="reg"></param>
+        /// <param name="add"></param>
+        /// <returns>Boolean value of the C flag</returns>
         private static bool CheckCarryAdd(ref ushort reg, ushort add)
         {
             return (((reg & 0xF0) - (add & 0xF0)) & 0x100) == 0x100;
+
         }
 
+        /// <summary>
+        /// Checks for an underflow in subtraction.
+        /// </summary>
+        /// <returns>Boolean value of the C flag</returns>
         private static bool CheckCarrySubtract()
         {
             return false; //TODO
         }
 
+        /// <summary>
+        /// Pushes the 16-bit register to the stack and decrements the stack pointer by 2.
+        /// </summary>
         private static void Push(ushort data, ref Memory mem, ref Registers regs)
         {
             mem.Write16(regs.SP, data);
             regs.SP -= 2;
         }
 
+        /// <summary>
+        /// Pops the 16-bit register from the stack and increments the stack pointer by 2.
+        /// </summary>
         private static ushort Pop(ref Memory mem, ref Registers regs)
         {
             ushort data = mem.Read8(regs.SP);
@@ -43,6 +68,10 @@
             return data;
         }
 
+        /// <summary>
+        /// Converts one byte to eight bits corresponding to CPU flags.
+        /// </summary>
+        /// <returns>Array of CPU flags</returns>
         private static bool[] ByteToBits(byte start)
         {
             bool[] bits = new bool[8];
@@ -54,6 +83,10 @@
             return bits;
         }
 
+        /// <summary>
+        /// Converts an array of CPU flags to one byte.
+        /// </summary>
+        /// <returns>One byte containing all CPU flags</returns>
         private static byte BitsToByte(bool[] bits)
         {
             byte result = 0;
@@ -66,8 +99,13 @@
             }
             return result;
         }
-
-        //XXX: Replace with bitwise.
+        
+        /// <summary>
+        /// Handles CB, a multibyte instruction.
+        /// <b>XXX: This method should be rewritten due to its immense length.</b>
+        /// </summary>
+        /// <param name="opcode">The byte representing the opcode following the CB instruction</param>
+        /// <param name="regs">All CPU registers</param>
         private static void DecodeCB(byte opcode, ref Registers regs, ref Memory mem)
         {
             int instrType = (opcode & 0xC0) >> 6;
@@ -451,7 +489,7 @@
             new Opcode("UNIMP XOR 0x{0:X2}",      1, 8,    (ref Registers regs, Memory mem) => { regs.A ^= regs.Immediate8;  SetFlags(ref regs, regs.A == 0, false, false, false); }),
             new Opcode("UNIMP RST 28h",         0, 16,   (ref Registers regs, Memory mem) => { /*TODO*/}),
 /*0xF0*/    new Opcode("LD A, $FF{0:X2}", 1, 12,   (ref Registers regs, Memory mem) => { regs.A = mem.Read8(0xFF00 + regs.Immediate8); }),
-            new Opcode("UNIMP POP AF",          0, 12,   (ref Registers regs, Memory mem) => { /*TODO*/}),
+            new Opcode("POP AF",          0, 12,   (ref Registers regs, Memory mem) => { regs.AF = Pop(ref mem, ref regs); }),
             new Opcode("LD A, (C)",       0, 8,    (ref Registers regs, Memory mem) => { regs.A = mem.Read8(0xFF00 + regs.C); }),
             new Opcode("DI",              0, 1,    (ref Registers regs, Memory mem) => { regs.Interrupts = false; }),
             new Opcode("UNIMP",           0, 1,    (ref Registers regs, Memory mem) => { /*TODO*/}),
